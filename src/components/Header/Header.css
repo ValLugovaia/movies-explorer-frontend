@@ -1,0 +1,17 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 74px;
+    background-color: #F3C1F8;
+    padding: 0 70px 0 70px;
+    /* padding-top: 18px;
+    padding-bottom: 20px;
+    padding-left: 70px;
+    padding-right: 71px; */
+
+}
+
+.header_main {
+    background-color: #F3C1F8;
+}
