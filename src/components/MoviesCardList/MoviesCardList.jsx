@@ -1,3 +1,4 @@
+import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
 function MoviesCardList() {
@@ -11,7 +12,7 @@ function MoviesCardList() {
                 <MoviesCard />
                 <MoviesCard />
             </section> 
-          <button className="movies-card-list__button" type="button">Ещё</button>
+            <button className="movies-card-list__button" type="button">Ещё</button>
         </section>
     );
 }

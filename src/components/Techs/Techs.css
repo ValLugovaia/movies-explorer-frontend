@@ -12,4 +12,53 @@
     letter-spacing: -0.04em;
 }
 
+.techs__block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 90px auto 100px;
+}
+
+.techs__block-title {
+    font-size: 50px;
+    font-weight: 400;
+    line-height: 58px;
+    letter-spacing: -0.04em;
+    margin: 0 auto 26px;
+}
+
+.techs__block-text {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.04em;
+    width: 460px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.techs__list {
+    margin: auto;
+    padding-left: 0;
+    gap: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+  .techs__item {
+    padding-top: 21px;
+    padding-bottom: 22px;
+    width: 90px;
+    box-sizing: border-box;
+    background-color: #e8e8e8;
+    border-radius: 10px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    letter-spacing: -0.04em;
+    text-decoration: none;
+    list-style-type: none;
+  }
+
 

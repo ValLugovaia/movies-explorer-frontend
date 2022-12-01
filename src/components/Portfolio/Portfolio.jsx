@@ -1,3 +1,4 @@
+import './Portfolio.css';
 import image from '../../images/portfolio__button.svg';
 
 function Portfolio() {
