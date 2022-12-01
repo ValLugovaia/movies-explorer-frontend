@@ -19,6 +19,12 @@
     gap: 270px;
 }
 
+.about-me__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .about-me__block-title {
     margin-top: 0;
     margin-bottom: 18px;
@@ -45,5 +51,6 @@
     font-weight: 500;
     line-height: 17px;
     text-decoration: none;
+    color: #000000;
 }
 

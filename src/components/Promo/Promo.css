@@ -1,16 +1,23 @@
 .promo {
     background: #F3C1F8;
-    height: 560px;
+    height: 450px;
     padding: 50px 70px 60px;
+    position: relative;
 }
 
 .promo__title {
     font-size: 40px;
     font-weight: 400;
     width: 626px;
+    margin: 0;
 }
 
 .promo__image {
     height: 244px;
     width: 722px;
+    position: absolute;
+    /* top: 102px;
+    left: 418px; */
+    right: 70px;
+    bottom: 60px;
 }

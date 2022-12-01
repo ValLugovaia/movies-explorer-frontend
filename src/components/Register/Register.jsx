@@ -1,5 +1,5 @@
 import './Register.css';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import logo from '../../images/header__logo.svg';
 
 function Register() {
@@ -47,7 +47,7 @@ function Register() {
             <div className="auth__bottom">
                 <button className="auth__submit-button" type="submit">Зарегистрироваться</button>
                 <p className="auth__link-text">Уже зарегистрированы?&ensp;
-                    <Link to="/signin" className="auth__link">Войти</Link>
+                    <NavLink to="/signin" className="auth__link">Войти</NavLink>
                 </p>
             </div>   
         </section>

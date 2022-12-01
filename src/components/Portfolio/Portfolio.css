@@ -34,8 +34,5 @@
     letter-spacing: -0.04em;
     text-decoration: none;
     list-style-type: none;
-}
-
-.portfolio__link:active {
-    text-decoration: none;
+    color: #000000;
 }

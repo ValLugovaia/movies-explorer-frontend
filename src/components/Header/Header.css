@@ -1,12 +1,6 @@
 .header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    align-self: center;
     height: 74px;
-    background-color: #F3C1F8;
     padding: 0 70px;
-}
-
-.header_main {
-    background-color: #F3C1F8;
 }

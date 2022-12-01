@@ -1,5 +1,5 @@
 import './Login.css';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import logo from '../../images/header__logo.svg';
 
 function Login() {
@@ -36,7 +36,7 @@ function Login() {
             <div className="auth__bottom">
                 <button className="auth__submit-button" type="submit">Войти</button>
                 <p className="auth__link-text">Ещё не зарегистрированы?&ensp;
-                    <Link to="/signup" className="auth__link">Регистрация</Link>
+                    <NavLink to="/signup" className="auth__link">Регистрация</NavLink>
                 </p>
             </div>
         </section>
