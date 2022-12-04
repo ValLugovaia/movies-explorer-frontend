@@ -6,7 +6,7 @@ function Register() {
     return (
         <section className="auth">
             <div className="auth__top">
-                <img className="auth__logo" src={logo} alt="Логотип учебного проекта." />
+                <NavLink to="/"><img className="header__logo" src={logo} alt="Логотип учебного проекта." /></NavLink>
                 <h1 className="auth__title">Добро пожаловать!</h1>
             </div>
             <form className="auth__form">
@@ -20,7 +20,7 @@ function Register() {
                         required
                     />
                     <span className="auth__error" id="name-error"></span>
-                </label>
+                </label>    
                 <label className="auth__field">
                     <span className="auth__label">E-mail</span>
                     <input

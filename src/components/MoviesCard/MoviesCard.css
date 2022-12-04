@@ -55,4 +55,39 @@
     font-weight: 400;
     font-size: 12px;
     line-height: 11px;
+    cursor: pointer;
+}
+
+.movies-card__button_delete {
+    background: url('../../images/card-button_delete.svg') no-repeat center #F9F9F9;
+}
+
+.movies-card__button_saved {
+    background: url('../../images/card-button_saved.svg') no-repeat center #FF4062;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1279px) {
+    .movies-card {
+        height: 309px;
+        width: 342px;
+    }
+}
+
+@media screen and (min-width: 320px) and (max-width: 767px) {
+    .movies-card {
+        height: 271px;
+        width: 300px;
+    }
+
+    .movies-card__name {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+    }
+    
+    .movies-card__duration {
+        font-size: 10px;
+        font-weight: 400;
+        line-height: 18px;
+    }
 }

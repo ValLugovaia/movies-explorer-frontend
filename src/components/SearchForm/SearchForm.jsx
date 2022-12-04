@@ -18,12 +18,15 @@ function SearchForm() {
                 <button className="search__button">Найти</button>
             </label>
             <div className="search__field-checkbox">
-                <input
-                    className="search__input-checkbox"
-                    id="checkbox"
-                    name="checkbox"
-                    type="checkbox"
-                />
+                <div className="search__checkbox">
+                    <input
+                        className="checkbox"
+                        id="checkbox"
+                        name="checkbox"
+                        type="checkbox"
+                    />
+                    <label className="label" for="checkbox"></label>
+                </div>
                 <label className="search__label-checkbox">Короткометражки</label>
             </div>
         </form>

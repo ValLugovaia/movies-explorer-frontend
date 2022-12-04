@@ -1,9 +1,9 @@
 import './Navigation.css';
 import { Route, NavLink } from 'react-router-dom';
-import logo from '../../images/header__logo.svg';
 import icon from '../../images/profile__icon.svg';
+import burger from '../../images/nav-tab__icon.svg';
 
-function Navigation() {
+function Navigation({ openNavBar }) {
   return (
     <div className="navigation">
         <Route exact path="/">
@@ -13,45 +13,49 @@ function Navigation() {
             </div>    
         </Route>
         <Route path="/movies">
-            <div className="navigation__links">
-                <NavLink to="/"><img className="header__logo" src={logo} alt="Логотип учебного проекта." /></NavLink>
-                <div className="navigation__block-links">
-                    <div className="navigation__movies-links">
-                        <NavLink className="navigation__movies-link" to="movies">Фильмы</NavLink>
-                        <NavLink className="navigation__movies-link" to="saved-movies">Сохранённые фильмы</NavLink>
-                    </div>
-                    <div className="navigation__profile-links">
-                        <NavLink className="navigation__profile-link" to="profile">Аккаунт</NavLink>
-                        <NavLink className="navigation__profile-link" to="profile"><img className="header__logo" src={icon} alt="Иконка профиля." /></NavLink>
-                    </div>
-                </div>
+            <div className="navigation__movies-links">
+                <NavLink className="navigation__movies-link" to="movies">Фильмы</NavLink>
+                <NavLink className="navigation__movies-link" to="saved-movies">Сохранённые фильмы</NavLink>
             </div>
+            <div className="navigation__profile-links">
+                <NavLink className="navigation__profile-link" to="profile">Аккаунт</NavLink>
+                <NavLink to="profile">
+                    <div className="navigation__profile-icon">
+                        <img src={icon} alt="Иконка профиля." />
+                    </div>
+                </NavLink>
+            </div>
+            <button className="navigation__burger-button" onClick={openNavBar}><img src={burger} alt="Кнопка бургер." /></button>
         </Route>
         <Route path="/saved-movies">
-            <div className="navigation__links">
-                <div className="navigation__movies-links">
-                    <NavLink className="navigation__movies-link" to="/"><img className="header__logo" src={logo} alt="Логотип учебного проекта." /></NavLink>
-                    <NavLink className="navigation__movies-link" to="movies">Фильмы</NavLink>
-                    <NavLink className="navigation__movies-link" to="saved-movies">Сохранённые фильмы</NavLink>
-                </div>
-                <div className="navigation__profile-links">
-                    <NavLink className="navigation__link" to="profile">Аккаунт</NavLink>
-                    <NavLink className="navigation__link" to="profile"><img className="header__logo" src={icon} alt="Иконка профиля." /></NavLink>
-                </div>
+            <div className="navigation__movies-links">
+                <NavLink className="navigation__movies-link" to="movies">Фильмы</NavLink>
+                <NavLink className="navigation__movies-link" to="saved-movies">Сохранённые фильмы</NavLink>
             </div>
+            <div className="navigation__profile-links">
+                <NavLink className="navigation__profile-link" to="profile">Аккаунт</NavLink>
+                <NavLink to="profile">
+                    <div className="navigation__profile-icon">
+                        <img src={icon} alt="Иконка профиля." />
+                    </div>
+                </NavLink>
+            </div>
+            <button className="navigation__burger-button" onClick={openNavBar}><img src={burger} alt="Кнопка бургер." /></button>
         </Route>
         <Route path="/profile">
-            <div className="navigation__block-links">
-                <div className="navigation__movies-links">
-                    <NavLink className="navigation__movies-link" to="/"><img className="header__logo" src={logo} alt="Логотип учебного проекта." /></NavLink>
-                    <NavLink className="navigation__movies-link" to="movies">Фильмы</NavLink>
-                    <NavLink className="navigation__movies-link" to="saved-movies">Сохранённые фильмы</NavLink>
-                </div>
-                <div className="navigation__profile-links">
-                    <NavLink className="navigation__link" to="profile">Аккаунт</NavLink>
-                    <NavLink className="navigation__link" to="profile"><img className="header__logo" src={icon} alt="Иконка профиля." /></NavLink>
-                </div>
+            <div className="navigation__movies-links">
+                <NavLink className="navigation__movies-link" to="movies">Фильмы</NavLink>
+                <NavLink className="navigation__movies-link" to="saved-movies">Сохранённые фильмы</NavLink>
             </div>
+            <div className="navigation__profile-links">
+                <NavLink className="navigation__profile-link" to="profile">Аккаунт</NavLink>
+                <NavLink to="profile">
+                    <div className="navigation__profile-icon">
+                        <img src={icon} alt="Иконка профиля." />
+                    </div>
+                </NavLink>
+            </div>
+            <button className="navigation__burger-button" onClick={openNavBar}><img src={burger} alt="Кнопка бургер." /></button>
         </Route>
         <Route path="/signup"></Route>
         <Route path="/signin"></Route>

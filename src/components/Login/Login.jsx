@@ -6,7 +6,7 @@ function Login() {
     return (
         <section className="auth">
             <div className="auth__top">
-                <img className="auth__logo" src={logo} alt="Логотип учебного проекта." />
+                <NavLink to="/"><img className="header__logo" src={logo} alt="Логотип учебного проекта." /></NavLink>
                 <h1 className="auth__title">Рады видеть!</h1>
             </div>
             <form className="auth__form">
