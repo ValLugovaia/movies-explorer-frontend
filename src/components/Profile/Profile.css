@@ -61,6 +61,10 @@
     cursor: pointer;
 }
 
+.profile__submit-button:hover {
+    opacity: 0.7;
+}
+
 .profile__link {
     margin-top: 16px;
     font-size: 13px;
@@ -69,6 +73,10 @@
     text-align: center;
     text-decoration: none;
     color: #FF4062;
+}
+
+.profile__link:hover {
+    opacity: 0.7;
 }
 
 @media screen and (min-width: 320px) and (max-width: 767px) {

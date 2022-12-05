@@ -54,6 +54,10 @@
     color: #000000;
 }
 
+.about-me__link:hover {
+    opacity: 0.7;
+}
+
 .about-me__photo {
     border-radius: 10px;
     width: 270px;

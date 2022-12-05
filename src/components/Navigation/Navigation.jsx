@@ -1,7 +1,7 @@
 import './Navigation.css';
 import { Route, NavLink } from 'react-router-dom';
 import icon from '../../images/profile__icon.svg';
-import burger from '../../images/nav-tab__icon.svg';
+import burger from '../../images/nav-bar__icon.svg';
 
 function Navigation({ openNavBar }) {
   return (

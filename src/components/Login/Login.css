@@ -20,6 +20,10 @@
     height: 38px;
 }
 
+.auth__logo:hover {
+    opacity: 0.8;
+}
+
 .auth__title {
     font-size: 24px;
     font-weight: 500;
@@ -51,6 +55,7 @@
 }
 
 .auth__input {
+    box-sizing: border-box;
     height: 46px;
     outline: none;
     border: none;
@@ -59,18 +64,23 @@
     font-size: 13px;
     font-weight: 500;
     line-height: 16px;
-    padding: 0;
+    padding: 0 0 0 15px;
 }
 
 .auth__bottom {
-    margin-top: 179px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 16px;
 }
 
+.auth__bottom_login {
+    margin-top: 179px;
+}
+
 .auth__submit-button {
+    padding: 0;
     border: none;
     outline: none;
     background: #000000;
@@ -86,6 +96,10 @@
     cursor: pointer;
 }
 
+.auth__submit-button:hover {
+    opacity: 0.8;
+}
+
 .auth__link-text {
     font-size: 14px;
     font-weight: 400;
@@ -97,6 +111,10 @@
 .auth__link {
     color: #000000;
     text-decoration: none;
+}
+
+.auth__link:hover {
+    opacity: 0.7;
 }
 
 @media screen and (min-width: 320px) and (max-width: 767px) {
@@ -126,13 +144,16 @@
     }
     
     .auth__bottom {
-        margin: 179px 0 0;
-        max-width: 396px;
         gap: 14px;
+    }
+
+    .auth__bottom_login {
+        margin: 267px 0 0;
     }
     
     .auth__submit-button {
         width: 100%;
+        max-width: 396px;
         height: 45px;
         font-size: 12px;
         font-weight: 500;

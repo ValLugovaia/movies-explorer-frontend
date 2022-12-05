@@ -6,7 +6,7 @@ function Login() {
     return (
         <section className="auth">
             <div className="auth__top">
-                <NavLink to="/"><img className="header__logo" src={logo} alt="Логотип учебного проекта." /></NavLink>
+                <NavLink to="/"><img className="auth__logo" src={logo} alt="Логотип учебного проекта." /></NavLink>
                 <h1 className="auth__title">Рады видеть!</h1>
             </div>
             <form className="auth__form">
@@ -33,7 +33,7 @@ function Login() {
                     <span className="auth__error" id="password-error"></span>
                 </label>
             </form>
-            <div className="auth__bottom">
+            <div className="auth__bottom auth__bottom_login">
                 <button className="auth__submit-button" type="submit">Войти</button>
                 <p className="auth__link-text">Ещё не зарегистрированы?&ensp;
                     <NavLink to="/signup" className="auth__link">Регистрация</NavLink>
