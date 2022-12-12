@@ -57,6 +57,11 @@
     opacity: 0.7;
 }
 
+.navigation__link_active {
+    border-bottom: 2px solid #000000;
+    padding-bottom: 4px;
+}
+
 .navigation__profile-links {
     display: flex;
     align-items: center;

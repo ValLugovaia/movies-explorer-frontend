@@ -14,11 +14,11 @@ function Navigation({ openNavBar }) {
         </Route>
         <Route path="/movies">
             <div className="navigation__movies-links">
-                <NavLink className="navigation__movies-link" to="movies">Фильмы</NavLink>
-                <NavLink className="navigation__movies-link" to="saved-movies">Сохранённые фильмы</NavLink>
+                <NavLink className="navigation__movies-link" activeClassName="navigation__link_active" to="movies">Фильмы</NavLink>
+                <NavLink className="navigation__movies-link" activeClassName="navigation__link_active" to="saved-movies">Сохранённые фильмы</NavLink>
             </div>
             <div className="navigation__profile-links">
-                <NavLink className="navigation__profile-link" to="profile">Аккаунт</NavLink>
+                <NavLink className="navigation__profile-link" activeClassName="navigation__link_active" to="profile">Аккаунт</NavLink>
                 <NavLink to="profile">
                     <div className="navigation__profile-icon">
                         <img src={icon} alt="Иконка профиля." />
@@ -29,11 +29,11 @@ function Navigation({ openNavBar }) {
         </Route>
         <Route path="/saved-movies">
             <div className="navigation__movies-links">
-                <NavLink className="navigation__movies-link" to="movies">Фильмы</NavLink>
-                <NavLink className="navigation__movies-link" to="saved-movies">Сохранённые фильмы</NavLink>
+                <NavLink className="navigation__movies-link" activeClassName="navigation__link_active" to="movies">Фильмы</NavLink>
+                <NavLink className="navigation__movies-link" activeClassName="navigation__link_active" to="saved-movies">Сохранённые фильмы</NavLink>
             </div>
             <div className="navigation__profile-links">
-                <NavLink className="navigation__profile-link" to="profile">Аккаунт</NavLink>
+                <NavLink className="navigation__profile-link" activeClassName="navigation__link_active" to="profile">Аккаунт</NavLink>
                 <NavLink to="profile">
                     <div className="navigation__profile-icon">
                         <img src={icon} alt="Иконка профиля." />
@@ -44,11 +44,11 @@ function Navigation({ openNavBar }) {
         </Route>
         <Route path="/profile">
             <div className="navigation__movies-links">
-                <NavLink className="navigation__movies-link" to="movies">Фильмы</NavLink>
-                <NavLink className="navigation__movies-link" to="saved-movies">Сохранённые фильмы</NavLink>
+                <NavLink className="navigation__movies-link" activeClassName="navigation__link_active" to="movies">Фильмы</NavLink>
+                <NavLink className="navigation__movies-link" activeClassName="navigation__link_active" to="saved-movies">Сохранённые фильмы</NavLink>
             </div>
             <div className="navigation__profile-links">
-                <NavLink className="navigation__profile-link" to="profile">Аккаунт</NavLink>
+                <NavLink className="navigation__profile-link" activeClassName="navigation__link_active" to="profile">Аккаунт</NavLink>
                 <NavLink to="profile">
                     <div className="navigation__profile-icon">
                         <img src={icon} alt="Иконка профиля." />

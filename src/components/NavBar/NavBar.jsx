@@ -10,11 +10,11 @@ function NavBar({ isOpen, onClose }) {
         <button className="nav-bar__close-button" type="button" onClick={onClose}><img src={close} alt="Крестик." /></button>
         <div className="nav-bar__movies-links">
           <NavLink className="nav-bar__movies-link" to="/">Главная</NavLink>
-          <NavLink className="nav-bar__movies-link" to="movies">Фильмы</NavLink>
-          <NavLink className="nav-bar__movies-link" to="saved-movies">Сохранённые фильмы</NavLink>
+          <NavLink className="nav-bar__movies-link" activeClassName="nav-bar__link_active" to="movies">Фильмы</NavLink>
+          <NavLink className="nav-bar__movies-link" activeClassName="nav-bar__link_active" to="saved-movies">Сохранённые фильмы</NavLink>
         </div>
         <div className="nav-bar__profile-links">
-          <NavLink className="nav-bar__profile-link" to="profile">Аккаунт</NavLink>
+          <NavLink className="nav-bar__profile-link" activeClassName="nav-bar__link_active" to="profile">Аккаунт</NavLink>
           <NavLink to="profile">
             <div className="nav-bar__profile-icon">
               <img src={icon} alt="Иконка профиля." />

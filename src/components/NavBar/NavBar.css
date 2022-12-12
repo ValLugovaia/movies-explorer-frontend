@@ -79,6 +79,11 @@
   color: #000000;
 }
 
+.nav-bar__link_active {
+  border-bottom: 2px solid #000000;
+  padding-bottom: 4px;
+}
+
 .nav-bar__profile-icon {
   display: flex;
   justify-content: center;

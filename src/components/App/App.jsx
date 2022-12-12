@@ -1,6 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
-import { Route } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Route, useHistory } from 'react-router-dom';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import mainApi from '../../utils/MainApi';
+/* import moviesApi from '../../utils/MoviesApi'; */
 import Header from '../Header/Header';
 import HeaderMain from '../HeaderMain/HeaderMain';
 import Main from '../Main/Main';
@@ -14,8 +19,102 @@ import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import NavBar from '../NavBar/NavBar';
 
 function App() {
+    const history = useHistory();
+    const [currentUser, setCurrentUser] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isNavBarOpen, setNavBarOpen] = useState(false);
 
+    const token = localStorage.getItem('jwt');
+
+    function handleRegistration(email, password, name) {
+        mainApi.register(email, password, name)
+          .then(() => {
+            handleLogin(email, password);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    
+      function handleLogin(email, password) {
+        setIsLoading(true);
+        mainApi.authorize(email, password)
+        .then((res) => {
+            localStorage.setItem('jwt', res.token);
+            /* checkToken(); */
+            setIsLoggedIn(true);
+            history.push('/movies');
+        })
+        .catch((err) => {
+            console.log(err);
+            setIsLoading(false)
+          });
+      }
+    
+      function handleLogout() {
+        localStorage.clear();
+        setIsLoggedIn(false);
+        history.push('/signin');
+      }
+    
+      function checkToken() {
+        if (token) {
+            mainApi.getUserInfo()
+            .then(() => {
+                setUserInfo();
+              setIsLoggedIn(true);
+            })
+            .catch(() => {
+                setIsLoggedIn(false);
+                localStorage.clear();
+            });
+          }
+      }
+
+      useEffect(() => {
+        if (isLoggedIn) {
+          Promise.all([mainApi.getUserInfo()])
+            .then(([data]) => {
+              setCurrentUser(data);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }, [isLoggedIn]);
+    
+      useEffect(() => {
+        checkToken();
+      }, [history]);
+
+      function handleUpdateUser({ name, email }) {
+        mainApi.changeUserInfo({ name, email })
+        .then((data) => {
+            setCurrentUser(data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+    function setUserInfo() {
+        setIsLoading(true)
+        mainApi.getUserInfo()
+          .then((data) => {
+            setCurrentUser(data);
+          })
+          .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+          });
+    }
+
+    function handleLoading() {
+        setIsLoading(false);
+    }
+
+ 
     function openNavBar() {
         setNavBarOpen(true);
     };
@@ -25,37 +124,47 @@ function App() {
     };
 
   return (
-    <div className="page">
+    <CurrentUserContext.Provider value={currentUser}>
+        <div className="page">
             <Route exact path="/">
                 <HeaderMain />
                 <Main />
                 <Footer />
             </Route>
-           <Route path="/movies">
-                <Header openNavBar={openNavBar} />
-                <Movies />
-                <Footer />
-            </Route>
-            <Route path="/saved-movies">
-                <Header openNavBar={openNavBar} />
-                <SavedMovies />
-                <Footer />
-            </Route>
-            <Route path="/profile">
-                <Header openNavBar={openNavBar} />
-                <Profile />
-            </Route>
+           <Route path="/movies" element={
+            <>
+                    <Header openNavBar={openNavBar} />
+                    <Movies loggedIn={isLoggedIn} setIsLoading={handleLoading} isLoading={isLoading} />
+                    <Footer />
+                    </>
+                  }
+                />
+            <Route path="/saved-movies" element={
+                  <ProtectedRoute loggedIn={isLoggedIn}>
+                    <Header openNavBar={openNavBar} />
+                    <SavedMovies loggedIn={isLoggedIn} isLoading={isLoading} />
+                    <Footer />
+                  </ProtectedRoute>
+                  }
+                />
+            <Route path="/profile" element={
+                  <ProtectedRoute loggedIn={isLoggedIn}>
+                    <Header openNavBar={openNavBar} />
+                    <Profile loggedIn={isLoggedIn} onUpdate={handleUpdateUser} onLogout={handleLogout} isLoading={isLoading} />
+                  </ProtectedRoute>
+                  }
+                />
             <Route path="/signup">
-                <Register />
+                <Register onRegistrate={handleRegistration} />
             </Route>
             <Route path="/signin">
-                <Login />
+                <Login onLogin={handleLogin} />
             </Route>
-            <Route path="/404">
-                <NotFoundPage />
-            </Route>
+            <Route path="*" element={<NotFoundPage />} />
             <NavBar isOpen={isNavBarOpen} onClose={closeNavBar} />
-    </div>
+        </div>
+    </CurrentUserContext.Provider>
+    
   );
 }
 
