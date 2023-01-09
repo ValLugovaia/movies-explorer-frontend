@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
 import { useState, useEffect } from 'react';
-import { Route, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import moviesApi from '../../utils/MoviesApi'
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import mainApi from '../../utils/MainApi';
-/* import moviesApi from '../../utils/MoviesApi'; */
 import Header from '../Header/Header';
 import HeaderMain from '../HeaderMain/HeaderMain';
 import Main from '../Main/Main';
@@ -17,154 +16,354 @@ import Register from '../Register/Register';
 import Login from '../Login/Login';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import NavBar from '../NavBar/NavBar';
+import mainApi from '../../utils/MainApi'
 
 function App() {
-    const history = useHistory();
-    const [currentUser, setCurrentUser] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isNavBarOpen, setNavBarOpen] = useState(false);
+  const token = localStorage.getItem('jwt');
+  const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isNavBarOpen, setNavBarOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
+  const [movies, setMovies] = useState([]);
+  const [foundMovies, setFoundMovies] = useState([]);
+  const [shortMovie, setShortMovie] = useState(false);
+  const [showedMovies, setShowedMovies] = useState([]);
+  const [savedMovies, setSavedMovies] = useState([]);
+  const [foundSavedMovies, setFoundSavedMovies] = useState([]);
+  const [width, setWidth] = useState(window.innerWidth);
+  const [count, setCount] = useState(0);
+  const [row, setRow] = useState(0);
+  const [resStatus, setResStatus] = useState('');
+  const [isVisibleButton, setIsVisibleButton] = useState(true);
+  
+  function handleLoading() {
+    setIsLoading(false);
+  };
 
-    const token = localStorage.getItem('jwt');
+  function handleLogout() {
+    localStorage.clear();
+    setIsLoggedIn(false);
+    setCurrentUser({});
+    setSavedMovies([]);
+    history.push('/');
+  };
 
-    function handleRegistration(email, password, name) {
-        mainApi.register(email, password, name)
-          .then(() => {
-            handleLogin(email, password);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+  function handleLogin(email, password) {
+    setIsLoading(true);
+    mainApi.authorize(email, password)
+    .then((res) => {
+      localStorage.setItem('jwt', res.token);
+      setIsLoggedIn(true);
+      setResStatus('');
+      history.push('/movies');
+    })
+    .catch((err) => {
+      console.log(err);
+      setResStatus(err);
+      setIsLoading(false);
+    });
+  };
+
+  function handleRegistration(name, email, password) {
+    setIsLoading(true);
+    mainApi.register(name, email, password)
+    .then(() => {
+      handleLogin(email, password);
+      setResStatus('');
+    })
+    .catch((err) => {
+      console.log(err);
+      setResStatus(err);
+      setIsLoading(false);
+    });
+  };
     
-      function handleLogin(email, password) {
-        setIsLoading(true);
-        mainApi.authorize(email, password)
-        .then((res) => {
-            localStorage.setItem('jwt', res.token);
-            /* checkToken(); */
-            setIsLoggedIn(true);
-            history.push('/movies');
+  function checkToken() {
+    if (token) {
+      mainApi.getUserInfo(token)
+      .then((data) => {
+        setCurrentUser(data);
+        setIsLoggedIn(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    };
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      checkToken(token);
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    setShowedMovies(foundMovies.slice(0, count * row));
+  }, [row, count, foundMovies]);
+
+  useEffect(() => {
+    if (width > 1280) {
+      setCount(3);
+      setRow(4);
+      return;
+    } else if (1280 > width && width > 768) {
+      setCount(2);
+      setRow(4);
+      return;
+    } else {
+      setCount(1);
+      setRow(5);
+      return;
+    }
+  }, [width]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [width]);
+
+  function handleResize() {
+    setTimeout(() => {
+      setWidth(window.innerWidth);
+    }, 1500);
+  };
+
+  function handleMoreButton() {
+    if (width < 768) {
+      setShowedMovies(foundMovies.slice(0, showedMovies.length + count * 5));
+    } else {
+      setShowedMovies(foundMovies.slice(0, showedMovies.length + count));
+    };
+  };
+
+  function handleVisibilityButton() {
+    setIsVisibleButton(foundMovies.length > showedMovies.length);
+  };
+
+  function setUserInfo() {
+    mainApi.getUserInfo()
+    .then((data) => {
+      setCurrentUser(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
+
+  function handleUpdateUser(name, email) {
+    mainApi.changeUserInfo(name, email)
+    .then((data) => {
+      setCurrentUser(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
+
+  function openNavBar() {
+    setNavBarOpen(true);
+  };
+    
+  function closeNavBar() {
+    setNavBarOpen(false);
+  };
+      
+  function saveItemsInLocalStorage(textSearch, isChecked, movies) {
+    localStorage.setItem('textSearch', textSearch);
+    localStorage.setItem('isChecked', isChecked);
+    localStorage.setItem('foundMovies', JSON.stringify(movies));
+  };
+
+  function filterMovies(textSearch) {
+    setIsLoading(true);
+    moviesApi.getAllMovies()
+    .then((movies) => {
+      setMovies(movies);
+      const entryRU = movies.filter((movie) => movie.nameRU.toLowerCase().includes(textSearch.toLowerCase()));
+      const entryEN = movies.filter((movie) => movie.nameEN.toLowerCase().includes(textSearch.toLowerCase()));
+      const newMovies = entryRU.concat(entryEN);
+      const shortMovies = newMovies.filter((movie) => movie.duration < 40);
+      if (shortMovie) {
+        saveItemsInLocalStorage(textSearch, shortMovie, shortMovies);
+        setFoundMovies(shortMovies);
+        handleVisibilityButton();
+      } else {
+        saveItemsInLocalStorage(textSearch, !shortMovie, newMovies);
+      setFoundMovies(newMovies);
+      handleVisibilityButton();
+      };
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => setIsLoading(false))
+  };
+
+  function filterSavedMovies(textSearch) {
+    setIsLoading(true);
+    mainApi.getMyMovies()
+    .then((movies) => {
+      setSavedMovies(movies);
+      const entryRU = movies.filter((movie) => movie.nameRU.toLowerCase().includes(textSearch.toLowerCase()));
+      const entryEN = movies.filter((movie) => movie.nameEN.toLowerCase().includes(textSearch.toLowerCase()));
+      const newMovies = entryRU.concat(entryEN);
+      const shortMovies = newMovies.filter((movie) => movie.duration < 40);
+      if (shortMovie) {
+        saveItemsInLocalStorage(textSearch, shortMovie, shortMovies);
+        setFoundSavedMovies(shortMovies);
+      } else {
+        saveItemsInLocalStorage(textSearch, !shortMovie, newMovies);
+        setFoundSavedMovies(newMovies);
+      };
+    })
+    .catch((err) => {
+      console.log(err);
+      setIsLoading(false);
+    });
+  };
+
+  function getSavedMovies() {
+    mainApi.getMyMovies()
+    .then((movies) => {
+      setSavedMovies(movies);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
+   
+  useEffect(() => {
+    getSavedMovies();
+  }, [isLoggedIn]);
+    
+  function handleSaveMovie(movie) {
+    const isSaved = savedMovies.some((i) => i.movieId === movie.id);
+    if (!isSaved) {
+      mainApi.saveMovie({
+        country: movie.country,
+        director: movie.director,
+        duration: movie.duration,
+        year: movie.year,
+        description: movie.description,
+        image: `https://api.nomoreparties.co/${movie.image.url}`,
+        trailerLink: movie.trailerLink,
+        thumbnail: `https://api.nomoreparties.co/${movie.image.formats.thumbnail.url}`,
+        movieId: movie.id,
+        nameRU: movie.nameRU,
+        nameEN: movie.nameEN,
+      })
+      .then((newMovie) => {
+        setSavedMovies([...savedMovies, newMovie]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      } else {
+        const relevantMovie = savedMovies.find((i) => i.movieId === movie.id);
+        mainApi.removeMovie(relevantMovie._id)
+        .then(() => {
+          setSavedMovies(savedMovies.filter((i) => i.movieId !== relevantMovie.movieId));
         })
         .catch((err) => {
-            console.log(err);
-            setIsLoading(false)
-          });
-      }
-    
-      function handleLogout() {
-        localStorage.clear();
-        setIsLoggedIn(false);
-        history.push('/signin');
-      }
-    
-      function checkToken() {
-        if (token) {
-            mainApi.getUserInfo()
-            .then(() => {
-                setUserInfo();
-              setIsLoggedIn(true);
-            })
-            .catch(() => {
-                setIsLoggedIn(false);
-                localStorage.clear();
-            });
-          }
-      }
-
-      useEffect(() => {
-        if (isLoggedIn) {
-          Promise.all([mainApi.getUserInfo()])
-            .then(([data]) => {
-              setCurrentUser(data);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      }, [isLoggedIn]);
-    
-      useEffect(() => {
-        checkToken();
-      }, [history]);
-
-      function handleUpdateUser({ name, email }) {
-        mainApi.changeUserInfo({ name, email })
-        .then((data) => {
-            setCurrentUser(data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-
-    function setUserInfo() {
-        setIsLoading(true)
-        mainApi.getUserInfo()
-          .then((data) => {
-            setCurrentUser(data);
-          })
-          .catch((err) => {
-            console.log(err);
-            setIsLoading(false);
-          });
-    }
-
-    function handleLoading() {
-        setIsLoading(false);
-    }
-
- 
-    function openNavBar() {
-        setNavBarOpen(true);
+          console.log(err);
+        });
+      };
     };
+    
+  function handleRemoveMovie(movie) {
+    mainApi.removeMovie(movie._id)
+    .then(() => {
+      setSavedMovies(savedMovies.filter((i) => i.movieId !== movie.movieId));
+      setFoundSavedMovies(savedMovies.filter((i) => i.movieId !== movie.movieId));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
 
-    function closeNavBar() {
-        setNavBarOpen(false);
-    };
+  useEffect(() => {
+    if (token) {
+      setUserInfo();
+    }
+  }, []);
+
+  const foundMoviesLocalStorage = JSON.parse(localStorage.getItem('foundMovies'));
+
+  useEffect(() => {
+    if (foundMoviesLocalStorage) {
+      setFoundMovies(foundMoviesLocalStorage);
+    } setIsLoading();
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-        <div className="page">
-            <Route exact path="/">
-                <HeaderMain />
-                <Main />
-                <Footer />
-            </Route>
-           <Route path="/movies" element={
+      <div className="page">
+        <Switch>
+          <Route exact path="/">
+            <HeaderMain isLoggedIn={isLoggedIn} openNavBar={openNavBar} />
+              <Main />
+              <Footer />
+          </Route>
+          <ProtectedRoute path="/movies" isLoggedIn={token} components={(
             <>
-                    <Header openNavBar={openNavBar} />
-                    <Movies loggedIn={isLoggedIn} setIsLoading={handleLoading} isLoading={isLoading} />
-                    <Footer />
-                    </>
-                  }
-                />
-            <Route path="/saved-movies" element={
-                  <ProtectedRoute loggedIn={isLoggedIn}>
-                    <Header openNavBar={openNavBar} />
-                    <SavedMovies loggedIn={isLoggedIn} isLoading={isLoading} />
-                    <Footer />
-                  </ProtectedRoute>
-                  }
-                />
-            <Route path="/profile" element={
-                  <ProtectedRoute loggedIn={isLoggedIn}>
-                    <Header openNavBar={openNavBar} />
-                    <Profile loggedIn={isLoggedIn} onUpdate={handleUpdateUser} onLogout={handleLogout} isLoading={isLoading} />
-                  </ProtectedRoute>
-                  }
-                />
-            <Route path="/signup">
-                <Register onRegistrate={handleRegistration} />
-            </Route>
-            <Route path="/signin">
-                <Login onLogin={handleLogin} />
-            </Route>
-            <Route path="*" element={<NotFoundPage />} />
-            <NavBar isOpen={isNavBarOpen} onClose={closeNavBar} />
-        </div>
-    </CurrentUserContext.Provider>
-    
+              <Header isLoggedIn={isLoggedIn} openNavBar={openNavBar} />
+              <Movies
+                onSearch={filterMovies}
+                movies={movies}
+                showedMovies={showedMovies}
+                savedMovies={savedMovies}
+                onSave={handleSaveMovie}
+                onDelete={handleRemoveMovie}
+                handleMoreButton={handleMoreButton}
+                shortMovie={shortMovie}
+                setShortMovie={setShortMovie}
+                isLoading={isLoading}
+                isVisibleButton={isVisibleButton}
+              />
+              <Footer />
+            </>
+            )}
+          />
+          <ProtectedRoute path="/saved-movies" isLoggedIn={token} components={(
+            <>
+              <Header isLoggedIn={isLoggedIn} openNavBar={openNavBar} />
+              <SavedMovies
+                onSearch={filterSavedMovies}
+                savedMovies={savedMovies}
+                foundSavedMovies={foundSavedMovies}
+                onDelete={handleRemoveMovie}
+                shortMovie={shortMovie}
+                setShortMovie={setShortMovie}
+                isVisibleButton={isVisibleButton}
+              />
+              <Footer />
+            </>
+            )}
+          />
+          <ProtectedRoute path="/profile" isLoggedIn={token} components={(
+            <>
+              <Header openNavBar={openNavBar} />
+              <Profile onUpdate={handleUpdateUser} onLogout={handleLogout} resStatus={resStatus} setResStatus={setResStatus} isLoading={isLoading} />
+            </>
+            )}
+          />
+          <Route path="/signup">
+            <Register onRegistrate={handleRegistration} isLoading={!isLoading} setIsLoading={handleLoading} />
+          </Route>
+          <Route path="/signin">
+            <Login onLogin={handleLogin} isLoading={!isLoading} setIsLoading={handleLoading} />
+          </Route>
+          <Route path="*">
+            <NotFoundPage />
+          </Route>
+        </Switch>
+        <NavBar isOpen={isNavBarOpen} onClose={closeNavBar} />
+      </div>
+    </CurrentUserContext.Provider> 
   );
 }
 

@@ -58,6 +58,10 @@
     cursor: pointer;
 }
 
+.movies-card__button:before {
+    content: 'Сохранить';
+}
+
 .movies-card__button:hover {
     opacity: 0.8;
 }
@@ -66,12 +70,20 @@
     background: url('../../images/card-button_delete.svg') no-repeat center #F9F9F9;
 }
 
+.movies-card__button_delete:before {
+    content: '';
+}
+
 .movies-card__button_delete:hover {
     opacity: 0.8;
 }
 
 .movies-card__button_saved {
     background: url('../../images/card-button_saved.svg') no-repeat center #FF4062;
+}
+
+.movies-card__button_saved:before {
+    content: '';
 }
 
 .movies-card__button_saved:hover {

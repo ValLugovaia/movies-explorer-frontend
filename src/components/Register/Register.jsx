@@ -1,29 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import './Register.css';
 import { NavLink } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import logo from '../../images/header__logo.svg';
+import useValidation from '../../hooks/useValidation';
+import { validNameText, validEmailText, validPasswordText, NAME_REGEXP } from '../../utils/constants';
 
-function Register({ onRegistrate }) {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    function handleSetName(evt) {
-        setName(evt.target.value);
-    }
-
-    function handleSetEmail(evt) {
-        setEmail(evt.target.value);
-    }
-
-    function handleSetPassword(evt) {
-        setPassword(evt.target.value);
-    }
+function Register({ onRegistrate, isLoading }) {
+    const {
+        values,
+        isValid,
+        isValidForm,
+        handleChange,
+        resetForm,
+    } = useValidation();
 
     function handleSubmit(evt) {
         evt.preventDefault();
-        onRegistrate(name, email, password);
+        onRegistrate(values.name, values.email, values.password);
     }
+
+    const isEnable = isLoading && isValidForm;
+
+    useEffect(() => {
+        return () => {
+          resetForm();
+        }
+    }, [])
 
     return (
         <section className="auth">
@@ -39,11 +42,12 @@ function Register({ onRegistrate }) {
                         id="name"
                         name="name"
                         type="text"
-                        value={name || ""}
+                        value={values.name || ""}
                         required
-                        onChange={handleSetName}
+                        onChange={handleChange}
+                        pattern={values.name ? NAME_REGEXP : null}
                     />
-                    <span className="auth__error" id="name-error"></span>
+                    <span className="auth__error" id="name-error">{!isValid.name && validNameText}</span>
                 </label>    
                 <label className="auth__field">
                     <span className="auth__label">E-mail</span>
@@ -52,11 +56,11 @@ function Register({ onRegistrate }) {
                         id="email"
                         name="email"
                         type="email"
-                        value={email || ""}
+                        value={values.email || ""}
                         required
-                        onChange={handleSetEmail}
+                        onChange={handleChange}
                     />
-                    <span className="auth__error" id="email-error"></span>
+                    <span className="auth__error" id="email-error">{!isValid.email && validEmailText}</span>
                 </label>
                 <label className="auth__field">
                     <span className="auth__label">Пароль</span>
@@ -65,14 +69,15 @@ function Register({ onRegistrate }) {
                         id="password"
                         name="password"
                         type="password"
-                        value={password || ""}
+                        value={values.password || ""}
                         required
-                        onChange={handleSetPassword}
+                        onChange={handleChange}
+                        minLength="8"
                     />
-                    <span className="auth__error" id="password-error"></span>
+                    <span className="auth__error" id="password-error">{!isValid.password && validPasswordText}</span>
                 </label>
                 <div className="auth__bottom auth__bottom_register">
-                    <button className="auth__submit-button" type="submit">Зарегистрироваться</button>
+                    <button className="auth__submit-button" type="submit" disabled={!isEnable}>Зарегистрироваться</button>
                     <p className="auth__link-text">Уже зарегистрированы?&ensp;
                         <NavLink to="/signin" className="auth__link">Войти</NavLink>
                     </p>

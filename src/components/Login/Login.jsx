@@ -1,24 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import './Login.css';
 import { NavLink } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import logo from '../../images/header__logo.svg';
+import useValidation from '../../hooks/useValidation';
+import { validEmailText, validPasswordText } from '../../utils/constants';
 
-function Login({ onLogin }) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    function handleSetEmail(evt) {
-        setEmail(evt.target.value);
-    }
-
-    function handleSetPassword(evt) {
-        setPassword(evt.target.value);
-    }
+function Login({ onLogin, isLoading }) {
+    const {
+        values,
+        isValid,
+        isValidForm,
+        handleChange,
+        resetForm,
+    } = useValidation();
 
     function handleSubmit(evt) {
         evt.preventDefault();
-        onLogin(email, password);
+        onLogin(values.email, values.password);
     }
+
+    const isEnable = isLoading && isValidForm;
+
+    useEffect(() => {
+        return () => {
+          resetForm();
+        }
+    }, [])
 
     return (
         <section className="auth">
@@ -26,7 +34,7 @@ function Login({ onLogin }) {
                 <NavLink to="/"><img className="auth__logo" src={logo} alt="Логотип учебного проекта." /></NavLink>
                 <h1 className="auth__title">Рады видеть!</h1>
             </div>
-            <form className="auth__form" onSubmit={handleSubmit}>
+            <form className="auth__form" onSubmit={handleSubmit}> 
                 <label className="auth__field">
                     <span className="auth__label">E-mail</span>
                     <input
@@ -34,11 +42,11 @@ function Login({ onLogin }) {
                         id="email"
                         name="email"
                         type="email"
-                        value={email || ""}
+                        value={values.email || ""}
                         required
-                        onChange={handleSetEmail}
+                        onChange={handleChange}
                     />
-                    <span className="auth__error" id="email-error"></span>
+                    <span className="auth__error" id="email-error">{!isValid.email && validEmailText}</span>
                 </label>
                 <label className="auth__field">
                     <span className="auth__label">Пароль</span>
@@ -47,14 +55,15 @@ function Login({ onLogin }) {
                         id="password"
                         name="password"
                         type="password"
-                        value={password || ""}
+                        value={values.password || ""}
                         required
-                        onChange={handleSetPassword}
+                        onChange={handleChange}
+                        minLength="8"
                     />
-                    <span className="auth__error" id="password-error"></span>
+                    <span className="auth__error" id="password-error">{!isValid.password && validPasswordText}</span>
                 </label>
                 <div className="auth__bottom auth__bottom_login">
-                    <button className="auth__submit-button" type="submit">Войти</button>
+                    <button className="auth__submit-button" type="submit" disabled={!isEnable}>Войти</button>
                     <p className="auth__link-text">Ещё не зарегистрированы?&ensp;
                         <NavLink to="/signup" className="auth__link">Регистрация</NavLink>
                     </p>

@@ -117,6 +117,12 @@
     opacity: 0.7;
 }
 
+.auth__error {
+    font-size: 10px;
+    line-height: 12px;
+    color: #FF4062;
+}
+
 @media screen and (min-width: 320px) and (max-width: 767px) {
     .auth {
         box-sizing: border-box;

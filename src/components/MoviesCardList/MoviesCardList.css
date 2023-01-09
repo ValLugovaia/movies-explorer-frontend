@@ -25,8 +25,16 @@
     cursor: pointer;
 }
 
+.movies-card-list__button_invisible {
+    display: none;
+}
+
 .movies-card-list__button:hover {
     opacity: 0.8;
+}
+
+.movies-card-list__text {
+    padding: 0 70px;
 }
 
 @media screen and (min-width: 768px) and (max-width: 1279px) {

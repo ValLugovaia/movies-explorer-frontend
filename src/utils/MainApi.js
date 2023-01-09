@@ -54,7 +54,7 @@ class MainApi {
         .then(this._handleResponse)
     }
   
-    changeUserInfo({ name, email }) {
+    changeUserInfo(name, email) {
         return fetch(`${this._baseUrl}/users/me`, {
             method: 'PATCH',
             headers: {

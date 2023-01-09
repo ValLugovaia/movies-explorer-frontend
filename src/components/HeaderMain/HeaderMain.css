@@ -7,6 +7,10 @@
     padding: 0 70px;
 }
 
+.header-main__logo {
+    margin-right: 40px;
+}
+
 .header-main__logo:hover {
     opacity: 0.8;
 }
