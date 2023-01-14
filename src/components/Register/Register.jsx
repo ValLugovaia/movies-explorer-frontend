@@ -4,9 +4,9 @@ import { NavLink } from 'react-router-dom';
 import { useEffect } from 'react';
 import logo from '../../images/header__logo.svg';
 import useValidation from '../../hooks/useValidation';
-import { validNameText, validEmailText, validPasswordText, NAME_REGEXP, EMAIL_REGEXP } from '../../utils/constants';
+import { validNameText, validEmailText, validPasswordText, badRequestText, сonflictText, internalServerErrorText, NAME_REGEXP, EMAIL_REGEXP } from '../../utils/constants';
 
-function Register({ onRegistrate, isLoading }) {
+function Register({ onRegistrate, isLoading, resStatus, setResStatus }) {
     const {
         values,
         isValid,
@@ -27,6 +27,12 @@ function Register({ onRegistrate, isLoading }) {
           resetForm();
         }
     }, [])
+
+    useEffect(() => {
+        setResStatus('');
+      }, []);
+
+    const authText = (resStatus === 'Ошибка: 400' ? badRequestText : (resStatus === 'Ошибка: 409' ? сonflictText : (resStatus === 'Ошибка: 500' ? internalServerErrorText: false)));
 
     return (
         <section className="auth">
@@ -78,6 +84,7 @@ function Register({ onRegistrate, isLoading }) {
                     <span className="auth__error" id="password-error">{!isValid.password && validPasswordText}</span>
                 </label>
                 <div className="auth__bottom auth__bottom_register">
+                    <span className="auth__response" id="res-error">{authText}</span>
                     <button className="auth__submit-button" type="submit" disabled={!isEnable}>Зарегистрироваться</button>
                     <p className="auth__link-text">Уже зарегистрированы?&ensp;
                         <NavLink to="/signin" className="auth__link">Войти</NavLink>

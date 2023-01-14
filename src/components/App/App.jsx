@@ -157,12 +157,18 @@ function App() {
   function handleUpdateUser(name, email) {
     mainApi.changeUserInfo(name, email)
     .then((data) => {
+      setResStatus(200);
       setCurrentUser(data);
     })
     .catch((err) => {
       console.log(err);
+      setResStatus(err);
     });
   };
+
+  function handleResStatus() {
+    setResStatus('');
+  }
 
   function openNavBar() {
     setNavBarOpen(true);
@@ -334,15 +340,15 @@ function App() {
           <ProtectedRoute path="/profile" isLoggedIn={token} components={(
             <>
               <Header openNavBar={openNavBar} />
-              <Profile onUpdate={handleUpdateUser} onLogout={handleLogout} resStatus={resStatus} setResStatus={setResStatus} isLoading={isLoading} />
+              <Profile onUpdate={handleUpdateUser} onLogout={handleLogout} resStatus={resStatus} setResStatus={handleResStatus} isLoading={isLoading} />
             </>
             )}
           />
           <Route path="/signup">
-            <Register onRegistrate={handleRegistration} isLoading={!isLoading} setIsLoading={handleLoading} />
+            <Register onRegistrate={handleRegistration} isLoading={!isLoading} setIsLoading={handleLoading} resStatus={resStatus} setResStatus={handleResStatus} />
           </Route>
           <Route path="/signin">
-            <Login onLogin={handleLogin} isLoading={!isLoading} setIsLoading={handleLoading} />
+            <Login onLogin={handleLogin} isLoading={!isLoading} setIsLoading={handleLoading} resStatus={resStatus} setResStatus={handleResStatus} />
           </Route>
           <Route path="*">
             <NotFoundPage />

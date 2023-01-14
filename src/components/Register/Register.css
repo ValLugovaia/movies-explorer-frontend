@@ -122,6 +122,13 @@
     color: #FF4062;
 }
 
+.auth__response {
+    font-size: 11px;
+    line-height: 13px;
+    text-align: center;
+    color: #FF4062;
+}
+
 @media screen and (min-width: 320px) and (max-width: 767px) {
     .auth {
         box-sizing: border-box;

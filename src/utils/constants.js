@@ -1,10 +1,10 @@
 const validNameText = "Некорректный формат имени";
 const validEmailText = "Некорректный формат Email";
-const validPasswordText = "Некорректный формат пароля";
+const validPasswordText = "Пароль содержит менее 8 знаков";
 
 const okUpdateText = "Данные пользователя успешно обновлены";
-const badRequestUpdateText = "Переданы некорректные данные пользователя";
-const сonflictUpdateText =  "Пользователь с таким email уже существует";
+const badRequestText = "Переданы некорректные данные пользователя";
+const сonflictText =  "Пользователь с таким email уже существует";
 const internalServerErrorText = "На сервере произошла ошибка";
 
 const NAME_REGEXP =
@@ -12,4 +12,4 @@ const NAME_REGEXP =
 
 const EMAIL_REGEXP = '^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$';
 
-export { validNameText, validEmailText, validPasswordText, okUpdateText, badRequestUpdateText, сonflictUpdateText, internalServerErrorText, NAME_REGEXP, EMAIL_REGEXP };
+export { validNameText, validEmailText, validPasswordText, okUpdateText, badRequestText, сonflictText, internalServerErrorText, NAME_REGEXP, EMAIL_REGEXP };

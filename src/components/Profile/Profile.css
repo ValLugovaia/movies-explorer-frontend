@@ -59,6 +59,45 @@
 
 .profile__submit-button {
     margin-top: 220px;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: #000000;
+    border-radius: 3px;
+    width: 100%;
+    min-width: 260px;
+    height: 45px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    text-align: center;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.profile__submit-button:hover {
+    opacity: 0.8;
+}
+
+.profile__block {
+    margin: 220px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.profile__response {
+    font-size: 11px;
+    line-height: 13px;
+    text-align: center;
+    color: #FF4062;
+}
+
+.profile__response_ok {
+    color: #2BE080;
+}
+
+.profile__edit-button {
     border: none;
     outline: none;
     background: none;
@@ -69,12 +108,11 @@
     cursor: pointer;
 }
 
-.profile__submit-button:hover {
+.profile__edit-button:hover {
     opacity: 0.7;
 }
 
 .profile__link {
-    margin-top: 16px;
     font-size: 13px;
     font-weight: 500;
     line-height: 16px;
