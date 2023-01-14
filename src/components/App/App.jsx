@@ -42,11 +42,16 @@ function App() {
   };
 
   function handleLogout() {
-    localStorage.clear();
-    setIsLoggedIn(false);
-    setCurrentUser({});
-    setSavedMovies([]);
-    history.push('/');
+    mainApi.logout()
+    .then(() => {
+      localStorage.clear();
+      setIsLoggedIn(false);
+      setCurrentUser({});
+      history.push('/');
+    })
+    .catch((err) => {
+      console.log(err)
+    })    
   };
 
   function handleLogin(email, password) {
@@ -359,6 +364,7 @@ function App() {
               <Redirect to="/" />
             }
           </Route>
+          <Route path="/signout"></Route>
           <Route path="*">
             <NotFoundPage />
           </Route>

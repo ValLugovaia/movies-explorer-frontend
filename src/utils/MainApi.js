@@ -31,14 +31,14 @@ class MainApi {
         .then(this._handleResponse)
     };
       
-    logout(email) {
+    logout() {
         return fetch(`${this._baseUrl}/signout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials: 'include',
-            body: JSON.stringify({ email }),
+            mode: "no-cors",
+            /* credentials: 'include', */
         })
         .then(this._handleResponse)
     };
