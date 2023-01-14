@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
 import { useState, useEffect } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import moviesApi from '../../utils/MoviesApi'
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
@@ -346,10 +346,18 @@ function App() {
             )}
           />
           <Route path="/signup">
-            <Register onRegistrate={handleRegistration} isLoading={!isLoading} setIsLoading={handleLoading} resStatus={resStatus} setResStatus={handleResStatus} />
+            {!isLoggedIn ?
+              <Register onRegistrate={handleRegistration} isLoading={!isLoading} setIsLoading={handleLoading} resStatus={resStatus} setResStatus={handleResStatus} />
+            :
+              <Redirect to="/" />
+            }   
           </Route>
           <Route path="/signin">
-            <Login onLogin={handleLogin} isLoading={!isLoading} setIsLoading={handleLoading} resStatus={resStatus} setResStatus={handleResStatus} />
+            {!isLoggedIn ?
+              <Login onLogin={handleLogin} isLoading={!isLoading} setIsLoading={handleLoading} resStatus={resStatus} setResStatus={handleResStatus} />
+            :
+              <Redirect to="/" />
+            }
           </Route>
           <Route path="*">
             <NotFoundPage />
