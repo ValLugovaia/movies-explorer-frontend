@@ -17,7 +17,7 @@ function Movies({
   setShortMovie,
   isLoading,
   setIsLoading,
-  isVisibleButton
+  isVisibleButton,
 }) {
   const foundMoviesLocalStorage = JSON.parse(localStorage.getItem('foundMovies'));
 

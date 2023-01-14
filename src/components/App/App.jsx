@@ -135,13 +135,19 @@ function App() {
   function handleMoreButton() {
     if (width < 768) {
       setShowedMovies(foundMovies.slice(0, showedMovies.length + count * 5));
+      handleVisibilityButton();
     } else {
       setShowedMovies(foundMovies.slice(0, showedMovies.length + count));
+      handleVisibilityButton();
     };
   };
 
   function handleVisibilityButton() {
-    setIsVisibleButton(foundMovies.length > showedMovies.length);
+    if (width < 768) {
+      setIsVisibleButton(foundMovies.length > showedMovies.length + count * 5);
+    } else {
+      setIsVisibleButton(foundMovies.length > showedMovies.length + count);
+    };
   };
 
   function setUserInfo() {
@@ -319,6 +325,7 @@ function App() {
               <Header isLoggedIn={isLoggedIn} openNavBar={openNavBar} />
               <SavedMovies
                 onSearch={filterSavedMovies}
+                movies={savedMovies}
                 savedMovies={savedMovies}
                 getSavedMovies={getSavedMovies}
                 foundSavedMovies={foundSavedMovies}
