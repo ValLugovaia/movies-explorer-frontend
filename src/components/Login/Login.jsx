@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import './Login.css';
-import { NavLink } from 'react-router-dom';
 import { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import logo from '../../images/header__logo.svg';
 import useValidation from '../../hooks/useValidation';
-import { validEmailText, validPasswordText } from '../../utils/constants';
+import { validEmailText, validPasswordText, EMAIL_REGEXP } from '../../utils/constants';
 
 function Login({ onLogin, isLoading }) {
     const {
@@ -45,6 +45,7 @@ function Login({ onLogin, isLoading }) {
                         value={values.email || ""}
                         required
                         onChange={handleChange}
+                        pattern={values.email ? EMAIL_REGEXP : null}
                     />
                     <span className="auth__error" id="email-error">{!isValid.email && validEmailText}</span>
                 </label>

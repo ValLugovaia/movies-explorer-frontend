@@ -3,7 +3,7 @@ import './Profile.css';
 import { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useValidation from '../../hooks/useValidation';
-import { validNameText, validEmailText, okUpdateText, badRequestUpdateText, сonflictUpdateText, internalServerErrorText, NAME_REGEXP } from '../../utils/constants';
+import { validNameText, validEmailText, okUpdateText, badRequestUpdateText, сonflictUpdateText, internalServerErrorText, NAME_REGEXP, EMAIL_REGEXP } from '../../utils/constants';
 
 function Profile({ onUpdate, onLogout, resStatus, setResStatus }) {
     const {
@@ -70,6 +70,7 @@ function Profile({ onUpdate, onLogout, resStatus, setResStatus }) {
                                 value={values.email || currentUser.email || ""}
                                 required
                                 onChange={handleChange}
+                                pattern={values.email ? EMAIL_REGEXP : null}
                             />
                         </div>
                         <span className="profile__error" id="email-error">{!isValid.email && validEmailText}</span>

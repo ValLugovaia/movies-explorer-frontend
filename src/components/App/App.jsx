@@ -192,38 +192,15 @@ function App() {
         setFoundMovies(shortMovies);
         handleVisibilityButton();
       } else {
-        saveItemsInLocalStorage(textSearch, !shortMovie, newMovies);
-      setFoundMovies(newMovies);
-      handleVisibilityButton();
+        saveItemsInLocalStorage(textSearch, shortMovie, newMovies);
+        setFoundMovies(newMovies);
+        handleVisibilityButton();
       };
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => setIsLoading(false))
-  };
-
-  function filterSavedMovies(textSearch) {
-    setIsLoading(true);
-    mainApi.getMyMovies()
-    .then((movies) => {
-      setSavedMovies(movies);
-      const entryRU = movies.filter((movie) => movie.nameRU.toLowerCase().includes(textSearch.toLowerCase()));
-      const entryEN = movies.filter((movie) => movie.nameEN.toLowerCase().includes(textSearch.toLowerCase()));
-      const newMovies = entryRU.concat(entryEN);
-      const shortMovies = newMovies.filter((movie) => movie.duration < 40);
-      if (shortMovie) {
-        saveItemsInLocalStorage(textSearch, shortMovie, shortMovies);
-        setFoundSavedMovies(shortMovies);
-      } else {
-        saveItemsInLocalStorage(textSearch, !shortMovie, newMovies);
-        setFoundSavedMovies(newMovies);
-      };
-    })
-    .catch((err) => {
-      console.log(err);
-      setIsLoading(false);
-    });
   };
 
   function getSavedMovies() {
@@ -235,11 +212,20 @@ function App() {
       console.log(err);
     });
   };
-   
-  useEffect(() => {
-    getSavedMovies();
-  }, [isLoggedIn]);
-    
+
+  function filterSavedMovies(textSearch) {
+    setIsLoading(true);
+    const entryRU = savedMovies.filter((movie) => movie.nameRU.toLowerCase().includes(textSearch.toLowerCase()));
+    const entryEN = savedMovies.filter((movie) => movie.nameEN.toLowerCase().includes(textSearch.toLowerCase()));
+    const newMovies = entryRU.concat(entryEN);
+    const shortMovies = newMovies.filter((movie) => movie.duration < 40);
+    if (shortMovie) {
+      setFoundSavedMovies(shortMovies);
+    } else {
+      setFoundSavedMovies(newMovies);
+    };
+  };
+  
   function handleSaveMovie(movie) {
     const isSaved = savedMovies.some((i) => i.movieId === movie.id);
     if (!isSaved) {
@@ -334,6 +320,7 @@ function App() {
               <SavedMovies
                 onSearch={filterSavedMovies}
                 savedMovies={savedMovies}
+                getSavedMovies={getSavedMovies}
                 foundSavedMovies={foundSavedMovies}
                 onDelete={handleRemoveMovie}
                 shortMovie={shortMovie}

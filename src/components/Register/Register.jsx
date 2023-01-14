@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { useEffect } from 'react';
 import logo from '../../images/header__logo.svg';
 import useValidation from '../../hooks/useValidation';
-import { validNameText, validEmailText, validPasswordText, NAME_REGEXP } from '../../utils/constants';
+import { validNameText, validEmailText, validPasswordText, NAME_REGEXP, EMAIL_REGEXP } from '../../utils/constants';
 
 function Register({ onRegistrate, isLoading }) {
     const {
@@ -59,6 +59,7 @@ function Register({ onRegistrate, isLoading }) {
                         value={values.email || ""}
                         required
                         onChange={handleChange}
+                        pattern={values.email ? EMAIL_REGEXP : null}
                     />
                     <span className="auth__error" id="email-error">{!isValid.email && validEmailText}</span>
                 </label>

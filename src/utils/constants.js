@@ -10,4 +10,6 @@ const internalServerErrorText = "На сервере произошла ошиб
 const NAME_REGEXP =
   '^[А-ЯЁа-яёA-Za-z\\-]{2,30}(\\s[А-ЯЁа-яёA-Za-z1-9\\-]+)?$';
 
-export { validNameText, validEmailText, validPasswordText, okUpdateText, badRequestUpdateText, сonflictUpdateText, internalServerErrorText, NAME_REGEXP };
+const EMAIL_REGEXP = '^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$';
+
+export { validNameText, validEmailText, validPasswordText, okUpdateText, badRequestUpdateText, сonflictUpdateText, internalServerErrorText, NAME_REGEXP, EMAIL_REGEXP };
