@@ -283,14 +283,6 @@ function App() {
     }
   }, []);
 
-  const foundMoviesLocalStorage = JSON.parse(localStorage.getItem('foundMovies'));
-
-  useEffect(() => {
-    if (foundMoviesLocalStorage) {
-      setFoundMovies(foundMoviesLocalStorage);
-    } setIsLoading();
-  }, []);
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -308,12 +300,14 @@ function App() {
                 movies={movies}
                 showedMovies={showedMovies}
                 savedMovies={savedMovies}
+                setFoundMovies={setFoundMovies}
                 onSave={handleSaveMovie}
                 onDelete={handleRemoveMovie}
                 handleMoreButton={handleMoreButton}
                 shortMovie={shortMovie}
                 setShortMovie={setShortMovie}
                 isLoading={isLoading}
+                setIsLoading={setIsLoading}
                 isVisibleButton={isVisibleButton}
               />
               <Footer />
