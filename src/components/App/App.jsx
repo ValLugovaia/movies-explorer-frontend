@@ -41,7 +41,8 @@ function App() {
   };
 
   function handleLogout() {
-    mainApi.logout()
+    const userEmail = localStorage.getItem('email');
+    mainApi.logout(userEmail)
     .then(() => {
       localStorage.clear();
       setIsLoggedIn(false);
@@ -59,6 +60,7 @@ function App() {
     mainApi.authorize(email, password)
     .then((res) => {
       localStorage.setItem('jwt', res.token);
+      localStorage.setItem('email', email);
       setIsLoggedIn(true);
       setResStatus('');
       history.push('/movies');
@@ -123,14 +125,9 @@ function App() {
     const token = localStorage.getItem('jwt');
     if (token) {
       checkToken(token);
-    }
-  }, [isLoggedIn]);
-
-  useEffect(() => {
-    if (token) {
       setUserInfo();
     }
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (width > 1280) {
