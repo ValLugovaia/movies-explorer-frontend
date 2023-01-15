@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import logo from '../../images/header__logo.svg';
 import useValidation from '../../hooks/useValidation';
-import { validEmailText, validPasswordText, badRequestText, internalServerErrorText, EMAIL_REGEXP } from '../../utils/constants';
+import { validEmailText, validPasswordText, badRequestText, unauthorizedText, internalServerErrorText, EMAIL_REGEXP } from '../../utils/constants';
 
 function Login({ onLogin, isLoading, resStatus, setResStatus }) {
     const {
@@ -32,7 +32,7 @@ function Login({ onLogin, isLoading, resStatus, setResStatus }) {
         setResStatus('');
       }, []);
 
-    const authText = (resStatus === 'Ошибка: 400' ? badRequestText : (resStatus === 'Ошибка: 500' ? internalServerErrorText: false));
+    const authText = (resStatus === 'Ошибка: 400' ? badRequestText : (resStatus === 'Ошибка: 401' ? unauthorizedText : (resStatus === 'Ошибка: 500' ? internalServerErrorText: false)));
 
     return (
         <section className="auth">

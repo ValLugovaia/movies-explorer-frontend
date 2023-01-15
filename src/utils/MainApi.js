@@ -37,8 +37,7 @@ class MainApi {
             headers: {
                 'Content-Type': 'application/json'
             },
-            mode: "no-cors",
-            /* credentials: 'include', */
+            credentials: 'include',
         })
         .then(this._handleResponse)
     };

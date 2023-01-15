@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
@@ -7,33 +7,50 @@ import Preloader from '../Preloader/Preloader';
 function Movies({
   onSearch,
   movies,
-  showedMovies,
+  handleShowedMovies,
   savedMovies,
-  setFoundMovies,
+  getSavedMovies,
   onSave,
   onDelete,
-  handleMoreButton,
-  shortMovie,
-  setShortMovie,
-  isLoading,
-  setIsLoading,
+  onMore,
   isVisibleButton,
+  isLoading,  
+  setIsLoading, 
 }) {
   const foundMoviesLocalStorage = JSON.parse(localStorage.getItem('foundMovies'));
+  const textSearchLocalStorage = localStorage.getItem('textSearch');
+
+  const [textSearch, setTextSearch] = useState(textSearchLocalStorage || '');
+  const [isChecked, setIsChecked] = useState(isCheckedLocalStorage());
+
+  function isCheckedLocalStorage() {
+    if (localStorage.getItem('isChecked')) {
+      return JSON.parse(localStorage.getItem('isChecked'));
+    } return false;
+  };
+
+  function handleTextSearch(textSearch) {
+    setTextSearch(textSearch);
+  };
+
+  function handleChecked(isChecked) {
+    setIsChecked(isChecked);
+  };
 
   useEffect(() => {
     if (foundMoviesLocalStorage) {
-      setFoundMovies(foundMoviesLocalStorage);
+      handleShowedMovies(foundMoviesLocalStorage);
+      getSavedMovies();
     } setIsLoading();
   }, []);
 
   return (
     <main>
-      <SearchForm films={movies} shortMovie={shortMovie} setShortMovie={setShortMovie} onSearch={onSearch} />
+      <SearchForm onSearch={onSearch} textSearch={textSearch} handleTextSearch={handleTextSearch} isChecked={isChecked} onChecked={handleChecked} />
       { isLoading ?
         <Preloader />
         :
-        <MoviesCardList savedMovies={savedMovies} onMore={handleMoreButton} onSave={onSave} onDelete={onDelete} films={showedMovies} isVisibleButton={isVisibleButton} />
+        <MoviesCardList films={movies} savedMovies={savedMovies} onSave={onSave} onDelete={onDelete} onMore={onMore} isVisibleButton={isVisibleButton} textSearch={textSearch} />
       }
     </main>  
   );

@@ -3,14 +3,13 @@ import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
 function MoviesCardList({
-  savedMovies,
-  onMore,
-  textSearch,
-  onSave,
   films,
-  isVisibleButton
+  savedMovies,
+  onSave,
+  onMore,
+  isVisibleButton,
+  textSearch,
 }) {
-
   const { pathname } = useLocation();
 
   const textLocalStorage = localStorage.getItem('textSearch');

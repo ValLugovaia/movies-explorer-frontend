@@ -27,7 +27,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [movies, setMovies] = useState([]);
   const [foundMovies, setFoundMovies] = useState([]);
-  const [shortMovie, setShortMovie] = useState(false);
   const [showedMovies, setShowedMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
   const [foundSavedMovies, setFoundSavedMovies] = useState([]);
@@ -46,12 +45,13 @@ function App() {
     .then(() => {
       localStorage.clear();
       setIsLoggedIn(false);
+      setSavedMovies([]);
       setCurrentUser({});
       history.push('/');
     })
     .catch((err) => {
       console.log(err)
-    })    
+    }) 
   };
 
   function handleLogin(email, password) {
@@ -83,6 +83,28 @@ function App() {
       setIsLoading(false);
     });
   };
+
+  function setUserInfo() {
+    mainApi.getUserInfo()
+    .then((data) => {
+      setCurrentUser(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
+
+  function handleUpdateUser(name, email) {
+    mainApi.changeUserInfo(name, email)
+    .then((data) => {
+      setResStatus(200);
+      setCurrentUser(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      setResStatus(err);
+    });
+  };
     
   function checkToken() {
     if (token) {
@@ -105,8 +127,10 @@ function App() {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    setShowedMovies(foundMovies.slice(0, count * row));
-  }, [row, count, foundMovies]);
+    if (token) {
+      setUserInfo();
+    }
+  }, []);
 
   useEffect(() => {
     if (width > 1280) {
@@ -137,82 +161,53 @@ function App() {
     }, 1500);
   };
 
+  function handleShowedMovies(movies) {
+    const visibleMovies = movies.slice(0, count * row);
+    setShowedMovies(visibleMovies);
+  }
+
   function handleMoreButton() {
     if (width < 768) {
       setShowedMovies(foundMovies.slice(0, showedMovies.length + count * 5));
-      handleVisibilityButton();
+      handleVisibilityButton(foundMovies);
     } else {
       setShowedMovies(foundMovies.slice(0, showedMovies.length + count));
-      handleVisibilityButton();
+      handleVisibilityButton(foundMovies);
     };
   };
 
-  function handleVisibilityButton() {
-    if (width < 768) {
-      setIsVisibleButton(foundMovies.length > showedMovies.length + count * 5);
-    } else {
-      setIsVisibleButton(foundMovies.length > showedMovies.length + count);
-    };
+  function handleVisibilityButton(movies) {
+      setIsVisibleButton(movies.length > showedMovies.length);
   };
 
-  function setUserInfo() {
-    mainApi.getUserInfo()
-    .then((data) => {
-      setCurrentUser(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  };
-
-  function handleUpdateUser(name, email) {
-    mainApi.changeUserInfo(name, email)
-    .then((data) => {
-      setResStatus(200);
-      setCurrentUser(data);
-    })
-    .catch((err) => {
-      console.log(err);
-      setResStatus(err);
-    });
-  };
-
-  function handleResStatus() {
-    setResStatus('');
-  }
-
-  function openNavBar() {
-    setNavBarOpen(true);
-  };
-    
-  function closeNavBar() {
-    setNavBarOpen(false);
-  };
-      
   function saveItemsInLocalStorage(textSearch, isChecked, movies) {
     localStorage.setItem('textSearch', textSearch);
     localStorage.setItem('isChecked', isChecked);
     localStorage.setItem('foundMovies', JSON.stringify(movies));
   };
 
-  function filterMovies(textSearch) {
+  function searchMovies(textSearch, isChecked, movies) {
+    const entryRU = movies.filter((movie) => movie.nameRU.toLowerCase().includes(textSearch.toLowerCase()));
+    const entryEN = movies.filter((movie) => movie.nameEN.toLowerCase().includes(textSearch.toLowerCase()));
+    const allMovies = entryRU.concat(entryEN);
+    const shortMovies = allMovies.filter((movie) => movie.duration < 40);
+  
+    if (isChecked) {
+      return [...new Set(shortMovies)]
+    }
+    return [...new Set(allMovies)];
+  };
+
+  function filterMovies({ textSearch, isChecked }) {
     setIsLoading(true);
     moviesApi.getAllMovies()
     .then((movies) => {
-      setMovies(movies);
-      const entryRU = movies.filter((movie) => movie.nameRU.toLowerCase().includes(textSearch.toLowerCase()));
-      const entryEN = movies.filter((movie) => movie.nameEN.toLowerCase().includes(textSearch.toLowerCase()));
-      const newMovies = entryRU.concat(entryEN);
-      const shortMovies = newMovies.filter((movie) => movie.duration < 40);
-      if (shortMovie) {
-        saveItemsInLocalStorage(textSearch, shortMovie, shortMovies);
-        setFoundMovies(shortMovies);
-        handleVisibilityButton();
-      } else {
-        saveItemsInLocalStorage(textSearch, shortMovie, newMovies);
-        setFoundMovies(newMovies);
-        handleVisibilityButton();
-      };
+      const searchedMovies = searchMovies(textSearch, isChecked, movies);
+      setMovies(searchedMovies);
+      saveItemsInLocalStorage(textSearch, isChecked, searchedMovies);
+      setFoundMovies(searchedMovies);
+      handleShowedMovies(searchedMovies)
+      handleVisibilityButton(searchedMovies);
     })
     .catch((err) => {
       console.log(err);
@@ -221,26 +216,26 @@ function App() {
   };
 
   function getSavedMovies() {
-    mainApi.getMyMovies()
-    .then((movies) => {
-      setSavedMovies(movies);
+    mainApi.getUserInfo()
+    .then((res) => {
+      mainApi.getMyMovies()
+      .then((movies) => {
+        const mySavedMovies = movies.data.filter(i => i.owner === res.data._id)
+        setSavedMovies(mySavedMovies);
+        setFoundSavedMovies(mySavedMovies);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     })
     .catch((err) => {
       console.log(err);
     });
   };
 
-  function filterSavedMovies(textSearch) {
-    setIsLoading(true);
-    const entryRU = savedMovies.filter((movie) => movie.nameRU.toLowerCase().includes(textSearch.toLowerCase()));
-    const entryEN = savedMovies.filter((movie) => movie.nameEN.toLowerCase().includes(textSearch.toLowerCase()));
-    const newMovies = entryRU.concat(entryEN);
-    const shortMovies = newMovies.filter((movie) => movie.duration < 40);
-    if (shortMovie) {
-      setFoundSavedMovies(shortMovies);
-    } else {
-      setFoundSavedMovies(newMovies);
-    };
+  function filterSavedMovies({ textSearch, isChecked }) {
+    const searchedMovies = searchMovies(textSearch, isChecked, savedMovies);
+    setFoundSavedMovies(searchedMovies);
   };
   
   function handleSaveMovie(movie) {
@@ -289,10 +284,22 @@ function App() {
   };
 
   useEffect(() => {
-    if (token) {
-      setUserInfo();
+    if (showedMovies) {
+      handleVisibilityButton(showedMovies);
     }
   }, []);
+
+  function handleResStatus() {
+    setResStatus('');
+  };
+
+  function openNavBar() {
+    setNavBarOpen(true);
+  };
+    
+  function closeNavBar() {
+    setNavBarOpen(false);
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -308,18 +315,17 @@ function App() {
               <Header isLoggedIn={isLoggedIn} openNavBar={openNavBar} />
               <Movies
                 onSearch={filterMovies}
-                movies={movies}
-                showedMovies={showedMovies}
+                films={movies}
+                movies={showedMovies}
+                handleShowedMovies={handleShowedMovies}
                 savedMovies={savedMovies}
-                setFoundMovies={setFoundMovies}
+                getSavedMovies={getSavedMovies}
                 onSave={handleSaveMovie}
                 onDelete={handleRemoveMovie}
-                handleMoreButton={handleMoreButton}
-                shortMovie={shortMovie}
-                setShortMovie={setShortMovie}
+                onMore={handleMoreButton}
+                isVisibleButton={isVisibleButton}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
-                isVisibleButton={isVisibleButton}
               />
               <Footer />
             </>
@@ -330,13 +336,10 @@ function App() {
               <Header isLoggedIn={isLoggedIn} openNavBar={openNavBar} />
               <SavedMovies
                 onSearch={filterSavedMovies}
-                movies={savedMovies}
+                movies={foundSavedMovies}
                 savedMovies={savedMovies}
                 getSavedMovies={getSavedMovies}
-                foundSavedMovies={foundSavedMovies}
                 onDelete={handleRemoveMovie}
-                shortMovie={shortMovie}
-                setShortMovie={setShortMovie}
                 isVisibleButton={isVisibleButton}
               />
               <Footer />
@@ -352,19 +355,18 @@ function App() {
           />
           <Route path="/signup">
             {!isLoggedIn ?
-              <Register onRegistrate={handleRegistration} isLoading={!isLoading} setIsLoading={handleLoading} resStatus={resStatus} setResStatus={handleResStatus} />
+              <Register onRegistrate={handleRegistration} resStatus={resStatus} setResStatus={handleResStatus} isLoading={!isLoading} setIsLoading={handleLoading} />
             :
               <Redirect to="/" />
             }   
           </Route>
           <Route path="/signin">
             {!isLoggedIn ?
-              <Login onLogin={handleLogin} isLoading={!isLoading} setIsLoading={handleLoading} resStatus={resStatus} setResStatus={handleResStatus} />
+              <Login onLogin={handleLogin} resStatus={resStatus} setResStatus={handleResStatus} isLoading={!isLoading} setIsLoading={handleLoading} />
             :
               <Redirect to="/" />
             }
           </Route>
-          <Route path="/signout"></Route>
           <Route path="*">
             <NotFoundPage />
           </Route>

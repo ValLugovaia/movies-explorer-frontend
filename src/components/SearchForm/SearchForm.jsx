@@ -1,47 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import './SearchForm.css';
 import icon from '../../images/search__icon.svg';
 
-function SearchForm({ films,
-  shortMovie,
-  setShortMovie,
-  onSearch, }) {
-
-  const location = useLocation();
-  const [value, setValue] = useState({});
-
+function SearchForm({
+  onSearch,
+  textSearch,
+  handleTextSearch,
+  isChecked,
+  onChecked,
+}) {
+  function handleChange(evt) {
+    handleTextSearch(evt.target.value);
+  };
+  
+  function handleChecked(evt) {
+    onChecked(evt.target.checked);
+  };
+  
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    onSearch({ textSearch, isChecked });
+  };
+  
   useEffect(() => {
-    if (value.search) {
-      onSearch(value.search, films);
-    }
-  }, [shortMovie]);
-
-  useEffect(() => {
-    if (location.pathname === '/movies') {
-      setValue({ search: localStorage.getItem('textSearch') });
-    }
-  }, []);
-
-  function handleInputValue(evt) {
-    setValue({ search: evt.target.value });
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (value.search) {
-      onSearch(value.search, films);
-    }
-  }
-
-  function toggleCheckbox(evt) {
-    if (evt.target.checked) {
-      setShortMovie(true);
-    } else {
-      setShortMovie(false);
-    }
-  }
+    onSearch({ textSearch, isChecked });
+  }, [isChecked]);
  
   return (
     <section className="search">
@@ -54,8 +38,8 @@ function SearchForm({ films,
             name="search"
             type="search"
             placeholder="Фильм"
-            value={value.search || ''}
-            onChange={handleInputValue}
+            value={textSearch || ''}
+            onChange={handleChange}
           />
           <button className="search__button">Найти</button>
         </label>
@@ -66,8 +50,8 @@ function SearchForm({ films,
               id="checkbox"
               name="checkbox"
               type="checkbox"
-              checked={!shortMovie ? false : true}
-              onChange={toggleCheckbox}
+              checked={isChecked}
+              onChange={handleChecked}
             />
             <label className="label" htmlFor="checkbox"></label>
           </div>
