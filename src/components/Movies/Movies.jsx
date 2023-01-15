@@ -15,7 +15,9 @@ function Movies({
   onMore,
   isVisibleButton,
   isLoading,  
-  setIsLoading, 
+  setIsLoading,
+  count,
+  row,
 }) {
   const foundMoviesLocalStorage = JSON.parse(localStorage.getItem('foundMovies'));
   const textSearchLocalStorage = localStorage.getItem('textSearch');
@@ -42,7 +44,7 @@ function Movies({
       handleShowedMovies(foundMoviesLocalStorage);
       getSavedMovies();
     } setIsLoading();
-  }, []);
+  }, [count * row]);
 
   return (
     <main>

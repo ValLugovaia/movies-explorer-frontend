@@ -6,7 +6,12 @@ import logo from '../../images/header__logo.svg';
 import useValidation from '../../hooks/useValidation';
 import { validNameText, validEmailText, validPasswordText, badRequestText, сonflictText, internalServerErrorText, NAME_REGEXP, EMAIL_REGEXP } from '../../utils/constants';
 
-function Register({ onRegistrate, isLoading, resStatus, setResStatus }) {
+function Register({
+    onRegistrate,
+    resStatus,
+    setResStatus,
+    isLoading,
+}) {
     const {
         values,
         isValid,
@@ -18,15 +23,15 @@ function Register({ onRegistrate, isLoading, resStatus, setResStatus }) {
     function handleSubmit(evt) {
         evt.preventDefault();
         onRegistrate(values.name, values.email, values.password);
-    }
+    };
 
     const isEnable = isLoading && isValidForm;
 
     useEffect(() => {
         return () => {
           resetForm();
-        }
-    }, [])
+        };
+    }, []);
 
     useEffect(() => {
         setResStatus('');

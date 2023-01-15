@@ -155,6 +155,11 @@ function App() {
     };
   }, [width]);
 
+  useEffect(() => {
+    setShowedMovies(foundMovies.slice(0, count * row));
+    handleVisibilityButton(foundMovies);
+  }, [row, count, foundMovies]);
+
   function handleResize() {
     setTimeout(() => {
       setWidth(window.innerWidth);
@@ -177,7 +182,11 @@ function App() {
   };
 
   function handleVisibilityButton(movies) {
-      setIsVisibleButton(movies.length > showedMovies.length);
+    if (width < 768) {
+      setIsVisibleButton(movies.length > showedMovies.length + count * 5);
+    } else {
+      setIsVisibleButton(movies.length > showedMovies.length + count);
+    };
   };
 
   function saveItemsInLocalStorage(textSearch, isChecked, movies) {
@@ -199,38 +208,47 @@ function App() {
   };
 
   function filterMovies({ textSearch, isChecked }) {
-    setIsLoading(true);
-    moviesApi.getAllMovies()
-    .then((movies) => {
-      const searchedMovies = searchMovies(textSearch, isChecked, movies);
-      setMovies(searchedMovies);
-      saveItemsInLocalStorage(textSearch, isChecked, searchedMovies);
-      setFoundMovies(searchedMovies);
-      handleShowedMovies(searchedMovies)
-      handleVisibilityButton(searchedMovies);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => setIsLoading(false))
+    const searchedMovies = searchMovies(textSearch, isChecked, movies);
+    if (movies.length === 0 && textSearch) {
+      setIsLoading(true);
+      moviesApi.getAllMovies()
+      .then((movies) => {
+        const searchedMovies = searchMovies(textSearch, isChecked, movies);
+        setMovies(movies);
+        saveItemsInLocalStorage(textSearch, isChecked, searchedMovies);
+        setFoundMovies(searchedMovies);
+        handleShowedMovies(searchedMovies)
+        handleVisibilityButton(searchedMovies);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setIsLoading(false))
+    };
+    saveItemsInLocalStorage(textSearch, isChecked, searchedMovies);
+    setFoundMovies(searchedMovies);
+    handleShowedMovies(searchedMovies)
+    handleVisibilityButton(searchedMovies);
   };
 
   function getSavedMovies() {
-    mainApi.getUserInfo()
-    .then((res) => {
-      mainApi.getMyMovies()
-      .then((movies) => {
-        const mySavedMovies = movies.data.filter(i => i.owner === res.data._id)
-        setSavedMovies(mySavedMovies);
-        setFoundSavedMovies(mySavedMovies);
+    if (savedMovies.length === 0) {
+      mainApi.getUserInfo()
+      .then((res) => {
+        mainApi.getMyMovies()
+        .then((movies) => {
+          const mySavedMovies = movies.data.filter(i => i.owner === res.data._id)
+          setSavedMovies(mySavedMovies);
+          setFoundSavedMovies(mySavedMovies);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       })
       .catch((err) => {
         console.log(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    };
   };
 
   function filterSavedMovies({ textSearch, isChecked }) {
@@ -283,12 +301,6 @@ function App() {
     });
   };
 
-  useEffect(() => {
-    if (showedMovies) {
-      handleVisibilityButton(showedMovies);
-    }
-  }, []);
-
   function handleResStatus() {
     setResStatus('');
   };
@@ -325,7 +337,9 @@ function App() {
                 onMore={handleMoreButton}
                 isVisibleButton={isVisibleButton}
                 isLoading={isLoading}
-                setIsLoading={setIsLoading}
+                setIsLoading={handleLoading}
+                count={count}
+                row={row}
               />
               <Footer />
             </>
@@ -355,14 +369,14 @@ function App() {
           />
           <Route path="/signup">
             {!isLoggedIn ?
-              <Register onRegistrate={handleRegistration} resStatus={resStatus} setResStatus={handleResStatus} isLoading={!isLoading} setIsLoading={handleLoading} />
+              <Register onRegistrate={handleRegistration} resStatus={resStatus} setResStatus={handleResStatus} isLoading={!isLoading} />
             :
               <Redirect to="/" />
             }   
           </Route>
           <Route path="/signin">
             {!isLoggedIn ?
-              <Login onLogin={handleLogin} resStatus={resStatus} setResStatus={handleResStatus} isLoading={!isLoading} setIsLoading={handleLoading} />
+              <Login onLogin={handleLogin} resStatus={resStatus} setResStatus={handleResStatus} isLoading={!isLoading} />
             :
               <Redirect to="/" />
             }

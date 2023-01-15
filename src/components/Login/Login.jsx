@@ -6,7 +6,12 @@ import logo from '../../images/header__logo.svg';
 import useValidation from '../../hooks/useValidation';
 import { validEmailText, validPasswordText, badRequestText, unauthorizedText, internalServerErrorText, EMAIL_REGEXP } from '../../utils/constants';
 
-function Login({ onLogin, isLoading, resStatus, setResStatus }) {
+function Login({
+    onLogin,
+    resStatus,
+    setResStatus,
+    isLoading,
+}) {
     const {
         values,
         isValid,
@@ -18,14 +23,14 @@ function Login({ onLogin, isLoading, resStatus, setResStatus }) {
     function handleSubmit(evt) {
         evt.preventDefault();
         onLogin(values.email, values.password);
-    }
+    };
 
     const isEnable = isLoading && isValidForm;
 
     useEffect(() => {
         return () => {
           resetForm();
-        }
+        };
     }, []);
 
     useEffect(() => {
