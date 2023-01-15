@@ -40,8 +40,8 @@ function App() {
     setIsLoading(false);
   };
 
-  function handleLogout(email) {
-    mainApi.logout(email)
+  function handleLogout() {
+    mainApi.logout()
     .then(() => {
       localStorage.clear();
       setIsLoggedIn(false);
