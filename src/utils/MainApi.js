@@ -31,13 +31,14 @@ class MainApi {
         .then(this._handleResponse)
     };
       
-    logout() {
+    logout(email) {
         return fetch(`${this._baseUrl}/signout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
+            body: JSON.stringify({ email })
         })
         .then(this._handleResponse)
     };
