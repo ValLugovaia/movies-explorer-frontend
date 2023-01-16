@@ -18,14 +18,14 @@ import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import NavBar from '../NavBar/NavBar';
 import mainApi from '../../utils/MainApi'
 import {
-  DESKTOP_WIDTH,
-  DESKTOP_COUNTS,
-  DESKTOP_ROWS,
+  MOBILE_COUNT,
+  MOBILE_MORE_COUNT,
   TABLET_WIDTH,
-  TABLET_COUNTS,
-  TABLET_ROWS,
-  MOBILE_COUNTS,
-  MOBILE_ROWS,
+  TABLET_COUNT,
+  TABLET_MORE_COUNT,
+  DESKTOP_WIDTH,
+  DESKTOP_COUNT,
+  DESKTOP_MORE_COUNT,
   SHORT_MOVIE_DURATION,
  } from '../../utils/constants';
 
@@ -39,13 +39,13 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [foundMovies, setFoundMovies] = useState([]);
   const [showedMovies, setShowedMovies] = useState([]);
+  const [countShowedMovies, setCountShowedMovies] = useState(0);
   const [savedMovies, setSavedMovies] = useState([]);
   const [foundSavedMovies, setFoundSavedMovies] = useState([]);
   const [width, setWidth] = useState(window.innerWidth);
-  const [count, setCount] = useState(0);
-  const [row, setRow] = useState(0);
   const [resStatus, setResStatus] = useState('');
   const [isVisibleButton, setIsVisibleButton] = useState(true);
+  const [countMoreMovies, setCountMoreMovies] = useState(0);
   
   function handleLoading() {
     setIsLoading(false);
@@ -140,61 +140,43 @@ function App() {
     }
   }, [isLoggedIn]);
 
-  useEffect(() => {
+  function handleDefaultShowedMovies() {
     if (width > DESKTOP_WIDTH) {
-      setCount(DESKTOP_COUNTS);
-      setRow(DESKTOP_ROWS);
-      return;
+      return DESKTOP_COUNT;
     } else if (DESKTOP_WIDTH > width && width > TABLET_WIDTH) {
-      setCount(TABLET_COUNTS);
-      setRow(TABLET_ROWS);
-      return;
+      return TABLET_COUNT;
     } else {
-      setCount(MOBILE_COUNTS);
-      setRow(MOBILE_ROWS);
-      return;
-    }
-  }, [width]);
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
+      return MOBILE_COUNT;
     };
-  }, [width]);
+  };
 
-  useEffect(() => {
-    setShowedMovies(foundMovies.slice(0, count * row));
-    handleVisibilityButton(foundMovies);
-  }, [row, count, foundMovies]);
+  function handleCountMoreMovies() {
+    if (width > DESKTOP_WIDTH) {
+      setCountMoreMovies(DESKTOP_MORE_COUNT);
+    } else if (DESKTOP_WIDTH > width && width > TABLET_WIDTH) {
+      setCountMoreMovies(TABLET_MORE_COUNT);
+    } else {
+      setCountMoreMovies(MOBILE_MORE_COUNT);
+    };
+  };
+
+  function handleShowedMovies(movies) {
+    const visibleMovies = movies.slice(0, countShowedMovies);
+    setShowedMovies(visibleMovies);
+  }
+
+  function handleMoreButton() {
+    setCountShowedMovies(countShowedMovies + countMoreMovies);
+  };
+
+  function handleVisibilityButton(movies) {
+    setIsVisibleButton(movies.length > countShowedMovies);
+  };
 
   function handleResize() {
     setTimeout(() => {
       setWidth(window.innerWidth);
     }, 1500);
-  };
-
-  function handleShowedMovies(movies) {
-    const visibleMovies = movies.slice(0, count * row);
-    setShowedMovies(visibleMovies);
-  }
-
-  function handleMoreButton() {
-    if (width < TABLET_WIDTH) {
-      setShowedMovies(foundMovies.slice(0, showedMovies.length + count * MOBILE_ROWS));
-      handleVisibilityButton(foundMovies);
-    } else {
-      setShowedMovies(foundMovies.slice(0, showedMovies.length + count));
-      handleVisibilityButton(foundMovies);
-    };
-  };
-
-  function handleVisibilityButton(movies) {
-    if (width < TABLET_WIDTH) {
-      setIsVisibleButton(movies.length > showedMovies.length + count * MOBILE_ROWS);
-    } else {
-      setIsVisibleButton(movies.length > showedMovies.length + count);
-    };
   };
 
   function saveItemsInLocalStorage(textSearch, isChecked, movies) {
@@ -309,6 +291,22 @@ function App() {
     });
   };
 
+  useEffect(() => {
+    handleCountMoreMovies();
+    setCountShowedMovies(handleDefaultShowedMovies());
+  }, [width]);
+
+  useEffect(() => {
+    handleVisibilityButton(foundMovies);
+  }, [countShowedMovies]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [width]);
+
   function handleResStatus() {
     setResStatus('');
   };
@@ -337,6 +335,7 @@ function App() {
                 onSearch={filterMovies}
                 films={movies}
                 movies={showedMovies}
+                countShowedMovies={countShowedMovies}
                 handleShowedMovies={handleShowedMovies}
                 savedMovies={savedMovies}
                 getSavedMovies={getSavedMovies}
@@ -346,8 +345,6 @@ function App() {
                 isVisibleButton={isVisibleButton}
                 isLoading={isLoading}
                 setIsLoading={handleLoading}
-                count={count}
-                row={row}
               />
               <Footer />
             </>

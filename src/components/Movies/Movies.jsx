@@ -7,6 +7,7 @@ import Preloader from '../Preloader/Preloader';
 function Movies({
   onSearch,
   movies,
+  countShowedMovies,
   handleShowedMovies,
   savedMovies,
   getSavedMovies,
@@ -16,8 +17,6 @@ function Movies({
   isVisibleButton,
   isLoading,  
   setIsLoading,
-  count,
-  row,
 }) {
   const foundMoviesLocalStorage = JSON.parse(localStorage.getItem('foundMovies'));
   const textSearchLocalStorage = localStorage.getItem('textSearch');
@@ -44,7 +43,7 @@ function Movies({
       handleShowedMovies(foundMoviesLocalStorage);
       getSavedMovies();
     } setIsLoading();
-  }, [count * row]);
+  }, [countShowedMovies]);
 
   return (
     <main>

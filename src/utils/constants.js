@@ -1,13 +1,13 @@
-const DESKTOP_WIDTH = 1280;
-const DESKTOP_COUNTS = 3;
-const DESKTOP_ROWS = 4;
+const MOBILE_COUNT = 5;
+const MOBILE_MORE_COUNT = 2;
 
 const TABLET_WIDTH = 768;
-const TABLET_COUNTS = 2;
-const TABLET_ROWS = 4;
+const TABLET_COUNT = 8;
+const TABLET_MORE_COUNT = 2;
 
-const MOBILE_COUNTS = 1;
-const MOBILE_ROWS = 5;
+const DESKTOP_WIDTH = 1280;
+const DESKTOP_COUNT = 12;
+const DESKTOP_MORE_COUNT = 3;
 
 const SHORT_MOVIE_DURATION = 40;
 
@@ -29,14 +29,14 @@ const NAME_REGEXP = '^[А-ЯЁа-яёA-Za-z\\-]{2,30}(\\s[А-ЯЁа-яёA-Za-z1-
 const EMAIL_REGEXP = '^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$';
 
 export {
-    DESKTOP_WIDTH,
-    DESKTOP_COUNTS,
-    DESKTOP_ROWS,
+    MOBILE_COUNT,
+    MOBILE_MORE_COUNT,
     TABLET_WIDTH,
-    TABLET_COUNTS,
-    TABLET_ROWS,
-    MOBILE_COUNTS,
-    MOBILE_ROWS,
+    TABLET_COUNT,
+    TABLET_MORE_COUNT,
+    DESKTOP_WIDTH,
+    DESKTOP_COUNT,
+    DESKTOP_MORE_COUNT,
     SHORT_MOVIE_DURATION,
     validNameText,
     validEmailText,
