@@ -17,6 +17,7 @@ import Login from '../Login/Login';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import NavBar from '../NavBar/NavBar';
 import mainApi from '../../utils/MainApi'
+import { DESKTOP_WIDTH, TABLET_WIDTH } from '../../utils/constants';
 
 function App() {
   const token = localStorage.getItem('jwt');
@@ -130,11 +131,11 @@ function App() {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    if (width > 1280) {
+    if (width > DESKTOP_WIDTH) {
       setCount(3);
       setRow(4);
       return;
-    } else if (1280 > width && width > 768) {
+    } else if (DESKTOP_WIDTH > width && width > TABLET_WIDTH) {
       setCount(2);
       setRow(4);
       return;
@@ -169,7 +170,7 @@ function App() {
   }
 
   function handleMoreButton() {
-    if (width < 768) {
+    if (width < TABLET_WIDTH) {
       setShowedMovies(foundMovies.slice(0, showedMovies.length + count * 5));
       handleVisibilityButton(foundMovies);
     } else {
@@ -179,7 +180,7 @@ function App() {
   };
 
   function handleVisibilityButton(movies) {
-    if (width < 768) {
+    if (width < TABLET_WIDTH) {
       setIsVisibleButton(movies.length > showedMovies.length + count * 5);
     } else {
       setIsVisibleButton(movies.length > showedMovies.length + count);

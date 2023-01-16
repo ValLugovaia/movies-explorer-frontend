@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
+import { enterSearchText, notFoundSearchText, notSavedMoviesText } from '../../utils/constants';
 
 function MoviesCardList({
   films,
@@ -9,14 +10,15 @@ function MoviesCardList({
   onMore,
   isVisibleButton,
   textSearch,
+  isChecked
 }) {
   const { pathname } = useLocation();
 
   const textLocalStorage = localStorage.getItem('textSearch');
   
   const textSearchMovies = pathname === "/movies" ? textLocalStorage : textSearch;
-  const enterWordText = !textSearchMovies && (pathname === "/movies" ? "Введите текст поиска" : "Сохраненных фильмов нет");
-  const notFoundText = pathname === "/movies" && films.length === 0 && "Ничего не найдено";
+  const enterWordText = !textSearchMovies && (pathname === "/movies" ? enterSearchText : (isChecked ? notFoundSearchText : notSavedMoviesText));
+  const notFoundText = films.length === 0 && notFoundSearchText;
   const text = enterWordText || notFoundText;
   const isSaved = (movie) => {
     return savedMovies.some((i) => i.movieId === movie.id);

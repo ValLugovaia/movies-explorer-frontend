@@ -52,7 +52,7 @@ function Movies({
       { isLoading ?
         <Preloader />
         :
-        <MoviesCardList films={movies} savedMovies={savedMovies} onSave={onSave} onDelete={onDelete} onMore={onMore} isVisibleButton={isVisibleButton} textSearch={textSearch} />
+        <MoviesCardList films={movies} savedMovies={savedMovies} onSave={onSave} onDelete={onDelete} onMore={onMore} isVisibleButton={isVisibleButton} textSearch={textSearch} isChecked={isChecked} />
       }
     </main>  
   );
