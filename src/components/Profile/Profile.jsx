@@ -24,7 +24,15 @@ function Profile({ onUpdate, onLogout, resStatus, setResStatus }) {
 
   function handleSubmit() {
     setOnEdit(false);
-    onUpdate(values.name, values.email);
+    if (values.name === undefined) {
+        onUpdate(currentUser.name, values.email);
+        localStorage.setItem('email', values.email);
+    } else if (values.email === undefined) {
+        onUpdate(values.name, currentUser.email);
+    } else {
+        onUpdate(values.name, values.email);
+        localStorage.setItem('email', values.email);
+    }
   };
 
   const isEnable = (currentUser.name === values.name && currentUser.email === values.email) || !isValidForm;
@@ -42,7 +50,7 @@ function Profile({ onUpdate, onLogout, resStatus, setResStatus }) {
     return (
         <main>
             <section className="profile">
-                <h1 className="profile__title">{`Привет, ${currentUser.name || values.name}!`}</h1>
+                <h1 className="profile__title">{`Привет, ${currentUser.name}!`}</h1>
                 { onEdit ?
                 <form className="profile__form" autoComplete="off">
                     <label className="profile__field">
@@ -80,43 +88,45 @@ function Profile({ onUpdate, onLogout, resStatus, setResStatus }) {
                     <button className="profile__submit-button" type="submit" onClick={handleSubmit} disabled={isEnable}>Сохранить</button>
                 </form>
                 :
-                <form className="profile__form" autoComplete="off" onSubmit={handleSubmit}>
-                    <label className="profile__field">
-                        <div className="profile__inpit-field">
-                            <span className="profile__label">Имя</span>
-                            <input
-                                className="profile__input profile__input_type_name"
-                                id="name"
-                                name="name"
-                                type="text"
-                                value={values.name || currentUser.name || ""}
-                                disabled
-                                onChange={handleChange}
-                            />
+                <>
+                    <form className="profile__form" autoComplete="off" onSubmit={handleSubmit}>
+                        <label className="profile__field">
+                            <div className="profile__inpit-field">
+                                <span className="profile__label">Имя</span>
+                                <input
+                                    className="profile__input profile__input_type_name"
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    value={values.name || currentUser.name || ""}
+                                    disabled
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <span className="profile__error" id="name-error"></span>
+                        </label>
+                        <label className="profile__field">
+                            <div className="profile__inpit-field">
+                                <span className="profile__label">E-mail</span>
+                                <input
+                                    className="profile__input profile__input_type_email"
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    value={values.email || currentUser.email || ""}
+                                    disabled
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <span className="profile__error" id="email-error"></span>
+                        </label>
+                        <div className="profile__block">
+                            <span className={updateTextClassname} id="res-error">{updateText}</span>
+                            <button className="profile__edit-button" type="submit" onClick={handleEditProfile}>Редактировать</button>
                         </div>
-                        <span className="profile__error" id="name-error"></span>
-                    </label>
-                    <label className="profile__field">
-                        <div className="profile__inpit-field">
-                            <span className="profile__label">E-mail</span>
-                            <input
-                                className="profile__input profile__input_type_email"
-                                id="email"
-                                name="email"
-                                type="email"
-                                value={values.email || currentUser.email || ""}
-                                disabled
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <span className="profile__error" id="email-error"></span>
-                    </label>
-                    <div className="profile__block">
-                        <span className={updateTextClassname} id="res-error">{updateText}</span>
-                        <button className="profile__edit-button" type="submit" onClick={handleEditProfile}>Редактировать</button>
-                        <button className="profile__link" onClick={onLogout}>Выйти из аккаунта</button>
-                    </div>
-                </form>
+                    </form>
+                    <button className="profile__link" onClick={onLogout}>Выйти из аккаунта</button>
+                </>
                 }
             </section>
         </main>

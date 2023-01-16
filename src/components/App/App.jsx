@@ -98,9 +98,9 @@ function App() {
 
   function handleUpdateUser(name, email) {
     mainApi.changeUserInfo(name, email)
-    .then((data) => {
+    .then(() => {
       setResStatus(200);
-      setCurrentUser(data);
+      setUserInfo();
     })
     .catch((err) => {
       console.log(err);

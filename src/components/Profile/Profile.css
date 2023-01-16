@@ -80,7 +80,7 @@
 }
 
 .profile__block {
-    margin: 220px auto;
+    margin: 220px auto 16px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -123,6 +123,7 @@
     outline: none;
     background: none;
     cursor: pointer;
+    padding: 0;
 }
 
 .profile__link:hover {
