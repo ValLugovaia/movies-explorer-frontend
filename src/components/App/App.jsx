@@ -17,7 +17,17 @@ import Login from '../Login/Login';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import NavBar from '../NavBar/NavBar';
 import mainApi from '../../utils/MainApi'
-import { DESKTOP_WIDTH, TABLET_WIDTH } from '../../utils/constants';
+import {
+  DESKTOP_WIDTH,
+  DESKTOP_COUNTS,
+  DESKTOP_ROWS,
+  TABLET_WIDTH,
+  TABLET_COUNTS,
+  TABLET_ROWS,
+  MOBILE_COUNTS,
+  MOBILE_ROWS,
+  SHORT_MOVIE_DURATION,
+ } from '../../utils/constants';
 
 function App() {
   const token = localStorage.getItem('jwt');
@@ -132,16 +142,16 @@ function App() {
 
   useEffect(() => {
     if (width > DESKTOP_WIDTH) {
-      setCount(3);
-      setRow(4);
+      setCount(DESKTOP_COUNTS);
+      setRow(DESKTOP_ROWS);
       return;
     } else if (DESKTOP_WIDTH > width && width > TABLET_WIDTH) {
-      setCount(2);
-      setRow(4);
+      setCount(TABLET_COUNTS);
+      setRow(TABLET_ROWS);
       return;
     } else {
-      setCount(1);
-      setRow(5);
+      setCount(MOBILE_COUNTS);
+      setRow(MOBILE_ROWS);
       return;
     }
   }, [width]);
@@ -171,7 +181,7 @@ function App() {
 
   function handleMoreButton() {
     if (width < TABLET_WIDTH) {
-      setShowedMovies(foundMovies.slice(0, showedMovies.length + count * 5));
+      setShowedMovies(foundMovies.slice(0, showedMovies.length + count * MOBILE_ROWS));
       handleVisibilityButton(foundMovies);
     } else {
       setShowedMovies(foundMovies.slice(0, showedMovies.length + count));
@@ -181,7 +191,7 @@ function App() {
 
   function handleVisibilityButton(movies) {
     if (width < TABLET_WIDTH) {
-      setIsVisibleButton(movies.length > showedMovies.length + count * 5);
+      setIsVisibleButton(movies.length > showedMovies.length + count * MOBILE_ROWS);
     } else {
       setIsVisibleButton(movies.length > showedMovies.length + count);
     };
@@ -197,7 +207,7 @@ function App() {
     const entryRU = movies.filter((movie) => movie.nameRU.toLowerCase().includes(textSearch.toLowerCase()));
     const entryEN = movies.filter((movie) => movie.nameEN.toLowerCase().includes(textSearch.toLowerCase()));
     const allMovies = entryRU.concat(entryEN);
-    const shortMovies = allMovies.filter((movie) => movie.duration < 40);
+    const shortMovies = allMovies.filter((movie) => movie.duration < SHORT_MOVIE_DURATION);
   
     if (isChecked) {
       return [...new Set(shortMovies)]
