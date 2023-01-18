@@ -219,7 +219,7 @@ function App() {
       .then((res) => {
         mainApi.getMyMovies()
         .then((movies) => {
-          const mySavedMovies = movies.data.filter(i => i.owner === res.data._id)
+          const mySavedMovies = movies.filter((i) => i.owner._id === res._id)
           setSavedMovies(mySavedMovies);
           setFoundSavedMovies(mySavedMovies);
         })
@@ -263,8 +263,8 @@ function App() {
       } else {
         const relevantMovie = savedMovies.find((i) => i.movieId === movie.id);
         mainApi.removeMovie(relevantMovie._id)
-        .then(() => {
-          setSavedMovies(savedMovies.filter((i) => i.movieId !== relevantMovie.movieId));
+        .then((movie) => {
+          setSavedMovies(savedMovies.filter((i) => i.movieId !== movie.data.movieId));
         })
         .catch((err) => {
           console.log(err);
