@@ -32,6 +32,7 @@ import {
 function App() {
   const token = localStorage.getItem('jwt');
   const history = useHistory();
+  const [width, setWidth] = useState(window.innerWidth);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isNavBarOpen, setNavBarOpen] = useState(false);
@@ -39,10 +40,9 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [foundMovies, setFoundMovies] = useState([]);
   const [showedMovies, setShowedMovies] = useState([]);
-  const [countShowedMovies, setCountShowedMovies] = useState(0);
+  const [countShowedMovies, setCountShowedMovies] = useState(handleDefaultShowedMovies());
   const [savedMovies, setSavedMovies] = useState([]);
   const [foundSavedMovies, setFoundSavedMovies] = useState([]);
-  const [width, setWidth] = useState(window.innerWidth);
   const [resStatus, setResStatus] = useState('');
   const [isVisibleButton, setIsVisibleButton] = useState(true);
   const [countMoreMovies, setCountMoreMovies] = useState(0);
@@ -131,14 +131,6 @@ function App() {
       });
     };
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      checkToken(token);
-      setUserInfo();
-    }
-  }, [isLoggedIn]);
 
   function handleDefaultShowedMovies() {
     if (width > DESKTOP_WIDTH) {
@@ -291,6 +283,26 @@ function App() {
     });
   };
 
+  function handleResStatus() {
+    setResStatus('');
+  };
+
+  function openNavBar() {
+    setNavBarOpen(true);
+  };
+    
+  function closeNavBar() {
+    setNavBarOpen(false);
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      checkToken(token);
+      setUserInfo();
+    }
+  }, [isLoggedIn]);
+
   useEffect(() => {
     handleCountMoreMovies();
     setCountShowedMovies(handleDefaultShowedMovies());
@@ -306,18 +318,6 @@ function App() {
       window.removeEventListener('resize', handleResize);
     };
   }, [width]);
-
-  function handleResStatus() {
-    setResStatus('');
-  };
-
-  function openNavBar() {
-    setNavBarOpen(true);
-  };
-    
-  function closeNavBar() {
-    setNavBarOpen(false);
-  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
