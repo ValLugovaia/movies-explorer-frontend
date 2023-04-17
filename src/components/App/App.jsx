@@ -47,6 +47,19 @@ function App() {
   const [isVisibleButton, setIsVisibleButton] = useState(true);
   const [countMoreMovies, setCountMoreMovies] = useState(0);
   
+  function handleShowedMovies(movies) {
+    const visibleMovies = movies.slice(0, countShowedMovies);
+    setShowedMovies(visibleMovies);
+  }
+
+  function handleMoreButton() {
+    setCountShowedMovies(countShowedMovies + countMoreMovies);
+  };
+
+  function handleVisibilityButton(movies) {
+    setIsVisibleButton(movies.length > countShowedMovies);
+  };
+  
   function handleLoading() {
     setIsLoading(false);
   };
@@ -152,18 +165,7 @@ function App() {
     };
   };
 
-  function handleShowedMovies(movies) {
-    const visibleMovies = movies.slice(0, countShowedMovies);
-    setShowedMovies(visibleMovies);
-  }
-
-  function handleMoreButton() {
-    setCountShowedMovies(countShowedMovies + countMoreMovies);
-  };
-
-  function handleVisibilityButton(movies) {
-    setIsVisibleButton(movies.length > countShowedMovies);
-  };
+  
 
   function handleResize() {
     setTimeout(() => {
