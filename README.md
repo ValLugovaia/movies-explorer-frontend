@@ -30,6 +30,7 @@
 git clone https://github.com/ValLugovaia/movies-explorer-frontend.git
 cd movies-explorer-frontend
 npm install
+```
 
 ## Планы по доработке
 1. Переписать приложение на TypeScript.
