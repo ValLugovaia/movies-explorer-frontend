@@ -22,7 +22,7 @@
 5. CSS
 
 ## Ссылки
-1. [Приложение](https://movies-explorer.vaal.nomoredomains.icu/)
+1. [Приложение](http://1398493-ct78522.tw1.ru/)
 2. [Макет в Figma](https://disk.yandex.ru/d/MGa0iE0HLZAqDA)
 
 ## Инструкция по развёртыванию
