@@ -102,7 +102,7 @@ class MainApi {
 }
   
 const mainApi = new MainApi({
-    baseUrl: 'https://api.movies-explorer.vaal.nomoredomains.icu',
+    baseUrl: 'http://api.1398493-ct78522.tw1.ru',
     headers: {
       'Content-Type': 'application/json'
     }
